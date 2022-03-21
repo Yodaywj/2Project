@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>民法典</title>
+    <link rel="stylesheet" href="../vendor/bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/juqery.js"></script>
+    <script src="../vendor/pagenation/jqpaginator.min.js"></script>
+    <script src="../vendor/bootstrap-4.5.0-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/echarts.js"></script>
+</head>
+<body class="no-gutters">
+    <div class="top-nav">
+        <nav class="navbar navbar-light bg-light justify-content-md-start"  style="background-color: rgb(115, 115, 115);">
+            <a class="navbar-brand mr-3" href="#">
+                <a href="/"><img src="../image/logo_1.png" width="50px" height="50px" ></a>
+                民法小助手
+            </a>
+            <form class="form-inline my-2 my-lg-0 ml-3">
+                <div class="input-field ">
+                    <div class="input-select form-control">
+                        <select data-trigger="" name="choices-single-defaul">
+                            <option placeholder="" class="no-gutters">法律条文</option>
+                            <option>典型案例</option>
+                            <option>裁判文书</option>
+                        </select>
+                    </div>
+                </div>
+                <input id="inputWord" class="form-control" type="search" placeholder="搜索关键字" aria-label="Search">
+                <input id="search" class="icon form-control btn btn-primary" type="button"  value="返回" aria-label="Search" onclick="window.location.href='/user/index'">
+            </form>
+        </nav>
+    </div>
+    <div class="container mt-2">
+        <div class="nav-container">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">全部</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link my-disabled" href="#" tabindex="-1" aria-disabled="true">法律条文</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="documents_result.html">案例</a>
+                </li>
+            </ul>
+        </div>
+        <div class="appBar mt-n1 mb-3 text-secondary">
+            <div id="totalResult" class="d-inline-block ml-3">共153条结果</div>
+            <div id="duration" class="d-inline-block">(用时0.12秒)</div>
+        </div>
+        <div class="row bg-success"></div>
+        <div id="showResult" class="showResult row min-vh-100">
+
+            <div id="laws" class="col col-9">
+
+                <div class="item mb-3">
+                    <div class="head"><a href="">物权</a>/<a href="">通则</a>/<a href="">物权的设立、变更、转让和消灭</a>/<a href="">不动产权登记</a></div>
+                    <div class="body border border-success" style="min-height: 48px;" >第二百零九条　Hello world,how are you不动产物权的设立、变更、转让和消灭，经依法登记，发生效力；未经登记，不发生效力，但是法律另有规定的除外。
+                        依法属于国家所有的自然资源，所有权可以不登记。第二百零九条　Hello world,how are you不动产物权的设立、变更、转让和消灭，经依法登记，发生效力；未经登记，不发生效力，但是法律另有规定的除外。
+                        依法属于国家所有的自然资源，所有权可以不登记。</div>
+                </div>
+                <div class="item mb-3">
+                    <div class="head"><a href="">物权</a>/<a href="">通则</a>/<a href="">物权的设立、变更、转让和消灭</a>/<a href="">不动产权登记</a></div>
+                    <div class="body">第二百零九条　Hello world,how are you不动产物权的设立、变更、转让和消灭，经依法登记，发生效力；未经登记，不发生效力，但是法律另有规定的除外。
+                        依法属于国家所有的自然资源，所有权可以不登记。</div>
+                </div>
+
+            </div>
+            <div class="pie"></div>
+<!--            画布容器-->
+            <div id="main" style="
+            display: none;
+    position: absolute;
+    right: 70px;
+    top: 70px;
+    /*画布大小*/
+    width: 500px;
+    height: 338px;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    padding: 0px;
+    margin: 0px;
+    vertical-align: baseline;
+    border-width: 0px;" class="col-4 d-inline-block"></div>
+        </div>
+
+        <div class="bottomNav ml-2 text-dark">共0页,当前第0页</div>
+        <nav class="Page navigation example">
+            <ul class="pagination" id="pagination"></ul>
+        </nav>
+    </div>
+    <footer style="background-color: #0B183D; color: #79C940">
+        联系方式：11011023
+    </footer>
+</body>
+<script>
+    let keyword = document.getElementById("inputWord").value;
+    let totalNum = 13;
+    let pageSize = 13;
+    let currentPage = 1;
+    let searchResult;
+    let record_returnData_number = 0;
+    //图标异步获取
+    var myChart = echarts.init(document.getElementById('main'));
+    //保存搜索结果
+    $(document).ready(function () {
+        keyword = getUrlQueryString().keyword;
+        $('#inputWord').val(keyword);
+        //如何既不影响首页跳转来的搜索，又不影响sessionStorage数据的读取
+        if (typeof keyword!="undefined" && keyword.length !== 0) {
+            // myChart.showLoading();
+            flashJqpage();
+            //顺序不能变（垃圾代码）
+            flashSearchResult();
+            flashSearchInfo();
+            flashJqpage();
+            flashbBottomNav();
+            flashChartJson();
+        }
+
+        console.log(JSON.parse(sessionStorage.getItem('search_res')));
+        let res = JSON.parse(sessionStorage.getItem('search_res'));
+        if (res && res.length !== 0) {
+            let html = '';
+            let nHtml = '';
+            $.each(res, function (index,item) {
+                nHtml="<a href=\"\">"+item.partName+"</a>"+((typeof item.subPartName === "undefined")?"\><a href=\"\">":("\><a href=\"\">"+item.subPartName)
+                    +"</a>\><a href=\"\">")+item.chapterName+"</a>"+((typeof item.sectionName === "undefined")?(""):("\><a href=\"\">"+item.sectionName)+"</a>");
+                if(nHtml.length > 100){
+                    nHtml = nHtml.substring(0,100);
+                    nHtml+='...';
+                }
+                html+=('<div class="item mb-3">'+
+                    '<div class="head">'+nHtml+'</div>'+
+                    '<div onclick="getExplain()" class="body border-success" style="min-height: 48px;" >'+'<a>'+item.content+'</a>'+item.contentName+'</div>'+
+                    '</div>');
+            });
+            if (!res || res==="" || res.length === 0) {
+                html = "<h2>没有搜索到相关结果，换个关键词吧！</h2>"
+            }
+            searchResult = res;
+            // console.log(res);
+            // flashContent(res);
+            $("#laws").html(html);
+            // 省略号
+            $(".---------item .body").each(function(){
+                const maxwidth = 135;
+                if($(this).text().length > maxwidth){
+                    $(this).text($(this).text().substring(0,maxwidth));
+                    $(this).html($(this).html()+'...');
+                }
+            });
+
+            //搜索信息更新
+            let searchInfo = JSON.parse(sessionStorage.getItem("searchInfo"));
+            if (searchInfo) {
+                $("#totalResult").text("共"+searchInfo.totalNum+"条结果");
+                $("#duration").text("(用时"+searchInfo.time+"秒)");
+                totalNum = searchInfo.totalNum;
+
+            }
+
+            //底部信息更新
+            if (sessionStorage.getItem("currentPage")) {
+                $(".bottomNav").text("共"+Math.round(totalNum/pageSize)+"页,当前第"+
+                    (Number)(sessionStorage.getItem("currentPage"))+"页");
+                currentPage = (Number)(sessionStorage.getItem("currentPage"));
+            }
+
+            //分页更新 需要参数totalNum，pageSize，currentPage
+
+            flashJqpage();
+
+            //6,关键词
+            if (sessionStorage.getItem("lawKeyword")) {
+                $('#inputWord').val(sessionStorage.getItem("lawKeyword"));
+                console.log(sessionStorage.getItem("lawKeyword"));
+            }
+
+        } else {
+            $("#laws").html("你还没有开始搜索哦！");
+        }
+    });
+
+    //匿名函数
+    $(function () {
+        flashJqpage();
+
+    });
+    function SelectText()
+    {
+        try{
+            //调用window节点的选中文本
+            var selecter=window.getSelection().toString();
+            //判断是否为空
+            if(selecter!=null&&selecter.trim()!=""){
+                // alert(selecter);
+            }
+        }catch(err){
+            //获得一个空范围对象，它的两个边界点都位于文档的开头。
+            var selecter=document.selection.createRange();
+            //获得该对象文本
+            var s=selecter.text;
+            //不为空并且不等于空字符串
+            if(s!=null&&s.trim()!=""){
+                alert(s)
+            }
+        }
+    }
+
+    function getExplain() {
+        try{
+            var selecter=window.getSelection().toString();
+            if(selecter!=null&&selecter.trim()!=""){
+                $.ajax({
+                    type: "GET",
+                    url: getRootPath()+"word-explain",
+                    async: false,
+                    data: {"word":selecter},
+                    dataType: "json",
+                    success:function (res) {
+                        console.log(res);
+                        if (res.fromTitle!=="null") {
+                            alert(res.explainText);
+                        } else {
+                            alert("没有找到解释！");
+                        }
+                    }
+                });
+            }
+        }catch(err){
+            var selecter=document.selection.createRange();
+            var s=selecter.text;
+            if(s!=null&&s.trim()!=""){
+                alert(s)
+            }
+        }
+
+    };
+    //替换文本前与后的空格
+    String.prototype.trim=function()
+    {
+        return this.replace(/(^\s*)|(\s*$)/g,"");
+    }
+    $("#search").click(function (){
+        console.log(keyword);
+        console.log(document.getElementById("inputWord").value);
+        if (!checkService.isEmpty(keyword) && keyword !== document.getElementById("inputWord").value) {
+            currentPage = 1;
+            totalNum = 13;
+            keyword = document.getElementById("inputWord").value;
+            myChart.showLoading();
+            //顺序不能变（垃圾代码）
+            flashSearchResult();
+            flashSearchInfo();
+            flashJqpage();
+            flashbBottomNav();
+            flashChartJson();
+        } else if (keyword === document.getElementById("inputWord").value) {
+            flashSearchResult();
+            flashSearchInfo();
+            flashJqpage();
+            flashbBottomNav();
+        }
+        else if (checkService.isEmpty(keyword)){
+            alert("输入为空或不是汉字!");
+        }
+        sessionStorage.setItem("lawKeyword", keyword);
+    });
+    function getRootPath(){
+    //获取当前网址
+        var curWwwPath=window.document.location.href;
+    //获取主机地址之后的目录
+        var pathName=window.document.location.pathname;
+        var pos=curWwwPath.indexOf(pathName);
+    //获取主机地址
+        var localhostPaht=curWwwPath.substring(0,pos);
+    //获取带"/“的项目名
+        var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+        return(localhostPaht+projectName+"/");
+    }
+    // 负责刷新搜索项和它的目录
+    function flashSearchResult() {
+
+        $.ajax({
+            type: "POST",
+            url: getRootPath()+"doc-search",
+            async: false,
+            data: { "keyword": keyword, "pageNo": (currentPage-1)*pageSize,"pageSize": pageSize },
+            dataType: "json",
+            success:function (res) {
+                let html = '';
+                let nHtml = '';
+                console.log(res);
+                sessionStorage.setItem('search_res', JSON.stringify(res));
+                $.each(res, function (index,item) {
+                    nHtml="<a href=\"\">"+item.partName+"</a>"+((typeof item.subPartName === "undefined")?"\><a href=\"\">":("\><a href=\"\">"+item.subPartName)
+                        +"</a>\><a href=\"\">")+item.chapterName+"</a>"+((typeof item.sectionName === "undefined")?(""):("\><a href=\"\">"+item.sectionName)+"</a>");
+
+                    if(nHtml.length > 100){
+                        nHtml = nHtml.substring(0,100);
+                        nHtml+='...';
+                    }
+                    html+=('<div class="item mb-3">'+
+                        '<div class="head">'+nHtml+'</div>'+
+                        '<div onclick="getExplain()" class="body border-success" style="min-height: 48px;" >'+'<a>'+item.content+'</a>'+item.contentName+'</div>'+
+                        '</div>');
+                });
+                if (res.length === 0) {
+                    html = "<h2>没有搜索到相关结果，换个关键词吧！</h2>"
+                }
+                searchResult = res;
+                // console.log(res);
+                // flashContent(res);
+                $("#laws").html(html);
+                // 省略号
+                $(".---------item .body").each(function(){
+                    const maxwidth = 135;
+                    if($(this).text().length > maxwidth){
+                        $(this).text($(this).text().substring(0,maxwidth));
+                        $(this).html($(this).html()+'...');
+                    }
+                });
+            }
+        });
+    }
+    function flashSearchInfo() {
+        $.ajax({
+            type: "POST",
+            url: getRootPath()+"search-info",
+            async: false,
+            dataType: "json",
+            success:function (res) {
+                let html = '';
+                totalNum = res.totalNum;
+                record_returnData_number = totalNum;
+                console.log(res);
+                $("#totalResult").text("共"+totalNum+"条结果");
+                $("#duration").text("(用时"+res.time+"秒)");
+                //搜索结果数为0则关闭图表
+                let searchInfo = {};
+                searchInfo.totalNum = totalNum;
+                searchInfo.time = res.time;
+                sessionStorage.setItem("searchInfo", JSON.stringify(searchInfo));
+            }
+        });
+    }
+    function flashbBottomNav() {
+        $(".bottomNav").text("共"+Math.round(totalNum/pageSize)+"页,当前第"+currentPage+"页");
+        sessionStorage.setItem("currentPage", (String)(currentPage));
+
+    }
+    //分页
+    function flashJqpage() {
+
+        $.jqPaginator('#pagination', {
+            // totalPages: 100, //设置分页的总页数
+            totalCounts: totalNum, //设置分页的总条目数
+            pageSize: pageSize,
+            visiblePages: 7, //设置最多显示的页码数（例如有100也，当前第1页，则显示1 - 7页）
+            currentPage: currentPage,//当前页
+            first: '<li class="first page-item"><a class="page-link" href="javascript:;">第一页</a></li>',
+            prev: '<li class="prev page-item"><a class="page-link" href="javascript:;">前一页</a></li>',
+            next: '<li class="next page-item"><a class="page-link" href="javascript:;">下一页</a></li>',
+            last: '<li class="last page-item"><a class="page-link" href="javascript:;">最后一页</a></li>',
+            page: '<li class="page page-item"><a class="page-link" href="javascript:;">{{page}}</a></li>',
+            onPageChange: function (num, type) {
+                //页面变化回调函数
+                if (type == "change") {
+                    console.log("当前页"+num);//当前页码
+                    currentPage = num;
+                    $('.text').html('当前第' + num + '页');
+                    //如果换关键词，则分页的currentPage要变化
+                    if (checkService.isEmpty(keyword)) {
+                        alert("输入为空或不是汉字!");
+                    } else if (keyword === document.getElementById("inputWord").value) {
+                        flashSearchResult();
+                        flashbBottomNav();
+                    } else if (keyword !== document.getElementById("inputWord").value && !checkService.isEmpty(keyword)) {
+                        keyword = document.getElementById("inputWord").value;
+                        currentPage = 1;
+                        totalNum = 13;
+                        flashSearchResult();
+                        flashSearchInfo();
+                        flashContent();
+                        flashJqpage();
+                        flashbBottomNav();
+                    }
+                }
+            }
+        });
+    }
+    //标题（每一行前的那个目录结构）文本
+    function flashContent(res) {
+        let heads = document.getElementsByClassName("head");
+        $.each(res, function (index,item) {
+            let html = "<a href=\"\">"+item.partName+"</a>" +
+                "\><a href=\"\">"+item.subPartName+"</a>\><a href=\"\">"+item.sectionName+"</a><a href=\"\">"+""+"</a>";
+            let nHtml = "<a href=\"\">"+item.partName+"</a>"+item.hasOwnProperty("subPartName")==null?"":("\><a href=\"\">"+item.subPartName)
+            +"</a>\><a href=\"\">"+item.chapterName+"</a>\><a href=\"\">"+item.sectionName+"</a>";
+            if(nHtml.length > 120){
+                nHtml = nHtml.substring(0,120);
+                nHtml+='...';
+            }
+            // console.log(index);
+            // console.log(item);
+        });
+    }
+    function getUrlQueryString() {
+        var url = location.search; //获取url中"?"符后的字串
+        var theRequest = {};
+        console.log(url);
+        if (url.indexOf("?") !== -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = decodeURIComponent(strs[i].split("=")[1]);
+            }
+        }
+        console.log(theRequest);
+        return theRequest;
+    };
+    // 绘制图表。
+    echarts.init(document.getElementById('main')).setOption({
+        series: {
+            name: '关键词分布',
+            radius: '60%',
+            type: 'pie',
+            data: [
+                {name: '第一编　总则', value: 1212},
+                {name: '第二编　物权', value: 2323},
+                {name: '第三编　合同', value: 1919},
+                {name: '第四编　人格权', value: 1919},
+                {name: '第五编　婚姻家庭', value: 1919},
+                {name: '第六编　继承', value: 1919},
+                {name: '第七编　侵权责任', value: 1919}
+            ]
+        }
+    });
+
+    // 该函数设置了三个图表
+    function flashChartJson() {
+        myChart = echarts.init(document.getElementById('main'));
+        myChart.hideLoading();
+        // alert(record_returnData_number);
+        if (record_returnData_number === 0) {
+            // myChart.clear();
+            myChart.dispose();
+        } else {
+            $.ajax({
+                type: "GET",
+                url: getRootPath()+"echart.json",
+                async: false,
+                dataType: "json",
+                success:function (data) {
+                    console.log(data);
+                    myChart.setOption({
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: '{a} <br/>{b}: {c} ({d}%)'
+                        },
+                        //
+                        legend: {
+                            orient: 'horizontal',
+                            left: 7,
+                            bottom: 2,
+                            data: [
+                                {name: '第一编　总则', value: data.fone},
+                                {name: '第二编　物权', value: data.two},
+                                {name: '第三编　合同', value: data.three},
+                                {name: '第四编　人格权', value: data.four},
+                                {name: '第五编　婚姻家庭', value: data.five},
+                                {name: '第六编　继承', value: data.six},
+                                {name: '第七编　侵权责任', value: data.seven}
+                            ]
+                        },
+                        series: [
+                            {
+                                name: '关键词分布',
+                                type: 'pie',
+                                radius: '50%',
+                                left: 12,
+                                label: {
+                                    formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+                                    backgroundColor: '#eee',
+                                    borderColor: '#aaa',
+                                    borderWidth: 1,
+                                    borderRadius: 4,
+                                    rich: {
+                                        a: {
+                                            color: '#999',
+                                            lineHeight: 22,
+                                            align: 'center'
+                                        },
+                                        hr: {
+                                            borderColor: '#aaa',
+                                            width: '100%',
+                                            borderWidth: 0.5,
+                                            height: 0
+                                        },
+                                        b: {
+                                            fontSize: 12,
+                                            lineHeight: 33
+                                        },
+                                        per: {
+                                            color: '#eee',
+                                            backgroundColor: '#334455',
+                                            //标题框内外边距
+                                            padding: [2, 18],
+                                            borderRadius: 2
+                                        }
+                                    }
+                                },
+                                data: [
+                                    {name: '第一编　总则', value: data.fone},
+                                    {name: '第二编　物权', value: data.two},
+                                    {name: '第三编　合同', value: data.three},
+                                    {name: '第四编　人格权', value: data.four},
+                                    {name: '第五编　婚姻家庭', value: data.five},
+                                    {name: '第六编　继承', value: data.six},
+                                    {name: '第七编　侵权责任', value: data.seven}
+                                ]
+                            }
+                        ]
+                    });
+                }
+            });
+        }
+
+
+    }
+</script>
+</html>

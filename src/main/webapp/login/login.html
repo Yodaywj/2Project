@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link rel="stylesheet" href="../vendor/bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <script src="../js/juqery.js"></script>
+    <script src="../js/input.js"></script>
+</head>
+<body class="pt-5">
+<!-- 导航栏 -->
+
+
+<div class="container align-self-center pt-5 border border-success">
+    <div class="top-nav text-center py-1">登录</div>
+    <div class="mid-body mx-auto w-25">
+        <form class="list-group" onsubmit="return func1()" action="/user/login" method="post">
+            <div class="list-group-item">
+                <label class="sr-only" for="userName">用户名</label>
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">U</div>
+                    </div>
+                    <input type="text" class="form-control" id="userName" name="userName" placeholder="用户名">
+                </div>
+            </div>
+			<div class=""></div>
+            <div class="list-group-item mb-2">
+                <label class="sr-only" for="userPassword">密码</label>
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">P</div>
+                    </div>
+                    <input type="password" class="form-control" id="userPassword" name="password" placeholder="密码">
+                </div>
+            </div>
+            <div class="col-auto">
+                <input id="signIn" type="submit" class="btn btn-primary mb-2" value="登录">
+            </div>
+            <div class="col-auto">
+                <div class="small d-inline">没有账号？立即<a href="/user/toRegister">注册</a></div>
+                <div class="small d-inline"><a href="/user/index">返回</a></div>
+            </div>
+            <input type="hidden" name="actiontype" value="login" />
+        </form>
+    </div>
+</div>
+</body>
+</html>

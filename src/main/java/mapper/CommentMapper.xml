@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.CommentMapper">
+
+    <select id="Findall" resultType="domain.Tb_Comment">
+        select * from tb_comment
+        <if test="user != ''">
+            where userName = #{user}
+        </if>
+        order by time desc limit 0,#{num};
+    </select>
+    <select id="selid" resultType="domain.Tb_Comment">
+        select * from tb_comment where id=#{id};
+    </select>
+
+    <insert id="save" parameterType="domain.Tb_Comment">
+        insert into tb_comment(correct,userName,time) values (#{correct},#{userName},#{time})
+    </insert>
+    <delete id="del" parameterType="domain.Tb_Comment">
+        delete from tb_comment where id=#{id};
+    </delete>
+</mapper>

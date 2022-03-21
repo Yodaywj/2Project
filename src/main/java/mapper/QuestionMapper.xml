@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.QuestionMapper">
+    <!--因为数据库中字段和实体类属性 完全一致 所以可以用 resultType 不然就要用resultMap做一下映射-->
+
+    <select id="listQuestionLimti10" resultType="domain.Tb_Question">
+        select * from tb_question
+        <if test="user != ''">
+            where userName = #{user}
+        </if>
+        order by time desc limit 0,#{num};
+    </select>
+
+
+    <insert id="save" parameterType="domain.Tb_Question">
+            insert into tb_question(type,answer1,answer2,answer3,answer4,answer5,answer6,answer7,answer8,answer9,answer10,time,userName,correct)
+            values (#{type},#{answer1},#{answer2},#{answer3},#{answer4},#{answer5},#{answer6},#{answer7},#{answer8},#{answer9},#{answer10},
+            #{time},#{userName},#{correct})
+    </insert>
+
+</mapper>

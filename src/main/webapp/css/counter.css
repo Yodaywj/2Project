@@ -1,0 +1,87 @@
+#displaysign{
+    position: relative;
+    top: 80px;
+    width: 70px;
+    height: 40px;
+}
+.signform {
+    font-family: 微软雅黑;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background-color: white;
+    width: 500px;
+    height: 500px;
+    border-radius: 1em;
+    text-align: center;
+    z-index: 999;
+    background-color: rgba(248,248,255,2);
+    transform:translate(-50%,-50%)
+}
+#registerform {
+    height: 450px;
+}
+.signclose {
+    cursor: pointer;
+    float: right;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+    height: 35px;
+    width: 35px;
+    margin-top: 10px;
+    margin-right: 10px;
+    z-index: 999;
+}
+#registerloading{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    left: 410px;
+    top: 90px;
+}
+.signinput {
+    text-align: center;
+    border-radius: 0.2em;
+    width: 280px;
+    height: 45px;
+    border: none;
+    background-color:#f2f2f2;
+    font-size: 28px;
+}
+.signinput::-webkit-input-placeholder {
+    font-size: 26px;
+}
+.userdiv {
+    position: relative;
+    margin-top: 80px;
+}
+.pwddiv {
+    position: relative;
+    margin-top: 20px;
+}
+.postdiv {
+    position: relative;
+    margin-top: 20px;
+}
+.postdiv button {
+    cursor: pointer;
+    color: white;
+    font-size: 26px;
+    border: none;
+    border-radius: 0.4em;
+    width: 280px;
+    height: 45px;
+    background-color:#4CAF50;
+}
+.chose {
+    height: 75px;
+}
+.center-self{
+    position: relative;
+    left: 50%;
+    top:50%;
+    transform:translate(-50%,-50%)
+}
+/*分隔符*/
+

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>答题挑战3</title>
+    <link rel="stylesheet" href="../css/style.css"/>
+    <link rel="stylesheet" href="../css/laws.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../vendor/bootstrap-4.5.0-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../vendor/bootstrap-4.5.0-dist/css/bootstrap-table.min.css"/>
+    <link rel="stylesheet" href="../css/laws.css" type="text/css"/>
+    <link rel="stylesheet" href="../css/counter.css"/>
+    <script src="../js/juqery.js"></script>
+    <script src="../vendor/bootstrap-4.5.0-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../vendor/bootstrap-4.5.0-dist/js/bootstrap.js"></script>
+    <script src="../vendor/bootstrap-4.5.0-dist/js/bootstrap-table.min.js"></script>
+</head>
+<body class="body_right1">
+    <nav class=" navbar navbar-expand-md navbar-dark mb-2" style="background-color: rgb(115, 115, 115);">
+    <a href="/"><img src="../image/logo_1.png" width="70px" height="70px"></a>
+    <div class="navbar-collapse">
+        <ul class="navbar-nav">
+            <li class="nav-item active mr-2 ">
+                <div class="dropdown">
+                    <button class="btn btn-dark text-white dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-expanded="false">
+                        民法典问答
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="../display/question1.html">问答一</a>
+                        <a class="dropdown-item" href="../display/question2.html">问答二</a>
+                        <a class="dropdown-item" href="../display/question3.html">问答三</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item active mr-2">
+                <a class="btn btn-dark text-white" href="../display/laws_all.html">法律全文</a>
+            </li>
+            <li class="nav-item active mr-2">
+                <a class="btn btn-dark text-white" href="../display/lawCase.html">案件实例</a>
+            </li>
+            <li class="nav-item active mr-2">
+                <a class="btn btn-dark text-white" href="/user/question">问答记录</a>
+            </li>
+        </ul>
+    </div>
+    <div class="d-flex justify-content-end">
+        <ul id="loginDisplay" class="navbar-nav">
+            <li class="nav-item active border-right border-white">
+                <a class="badge text-white" href="/user/toLogin">登录</a>
+            </li>
+            <li class="nav-item active">
+                <a class="badge  text-white" href="/user/toRegister">注册</a>
+            </li>
+        </ul>
+        &nbsp;&nbsp;
+        <div id="quit" class="btn badge badge-dark"></div>
+        &nbsp;&nbsp;
+    </div>
+</nav>
+    <div class="container">
+        <form name="input" action="/question/answer" method="post" target="myIframe3">
+    <ul class="list-group">
+        <input type="hidden" name="type" value="q3" />
+        <div>
+            <li class="list-group-item">1.依据《中华人民共和国民法典》规定,用人单位在承担其工作人员因执行工作任务造成他人损害的侵权责任后,可以向有( )的工作人员追偿
+                <br/><br/>
+                <input type="radio" name="answer1" value="A">A.过错
+                <br/>
+                <input type="radio" name="answer1" value="B">B.故意
+                <br/>
+                <input type="radio" name="answer1" value="C">C.重大过失
+                <br/>
+                <input type="radio" name="answer1" value="D">D.故意或者重大过失</li>
+        </div>
+        <div>
+            <li class="list-group-item">2.根据《中华人民共和国民法典》的规定，民事主体应当遵循( )，按照自己的意思设立、变更、终止民事法律关系。
+                <br/><br/>
+                <input type="radio" name="answer2" value="A">A.自愿原则
+                <br/>
+                <input type="radio" name="answer2" value="B">B.诚实原则
+                <br/>
+                <input type="radio" name="answer2" value="C">C.等价有偿原则
+                <br/>
+                <input type="radio" name="answer2" value="D">D.合理原则</li>
+        </div>
+        <div>
+            <li class="list-group-item">3.开发商、物业公司在利用小区业主共有部分产生的收益，在扣除合理成本后，剩余收益归( )共有。
+                <br/><br/>
+                <input type="radio" name="answer3" value="A">A.开发商
+                <br/>
+                <input type="radio" name="answer3" value="B">B.物业公司
+                <br/>
+                <input type="radio" name="answer3" value="C">C.居委会
+                <br/>
+                <input type="radio" name="answer3" value="D">D.小区业主</li>
+        </div>
+        <div>
+            <li class="list-group-item">4.甲承租乙的房屋用于生活居住，在租赁合同有效期间内，乙要出售该房屋，并要求甲搬走，甲不想搬走，可以提出什么理由?
+                <br/><br/>
+                <input type="radio" name="answer4" value="A">A.买卖不破租赁
+                <br/>
+                <input type="radio" name="answer4" value="B">B.买卖破租赁
+                <br/>
+                <input type="radio" name="answer4" value="C">C.不同意乙卖房
+                <br/>
+                <input type="radio" name="answer4" value="D">D.卖房只能卖给自己</li>
+        </div>
+        <div>
+            <li class="list-group-item">5.甲自愿施救处于危难中的乙，在施救过程中造成乙受伤害的，甲
+                <br/><br/>
+                <input type="radio" name="answer5" value="A">A.承担全部民事责任
+                <br/>
+                <input type="radio" name="answer5" value="B">B.承担次要民事责任
+                <br/>
+                <input type="radio" name="answer5" value="C">C.承担同等民事责任
+                <br/>
+                <input type="radio" name="answer5" value="D">D.不承担民事责任</li>
+        </div>
+        <div>
+            <li class="list-group-item">6.根据《中华人民共和国民法典》的规定，人格权受到损害的，可以要求侵权人承担
+                <br/><br/>
+                <input type="radio" name="answer6" value="A">A.刑事责任
+                <br/>
+                <input type="radio" name="answer6" value="B">B.行政责任
+                <br/>
+                <input type="radio" name="answer6" value="C">C.民事责任
+                <br/>
+                <input type="radio" name="answer6" value="D">D.劳动责任</li>
+        </div>
+        <div>
+            <li class="list-group-item">7.双十一购物节的时候，甲通过某网络购物平台购买一串蜜蜡手链，该笔购物的交付时间是
+                <br/><br/>
+                <input type="radio" name="answer7" value="A">A.快递小哥收货时间
+                <br/>
+                <input type="radio" name="answer7" value="B">B.网店店主发货时间
+                <br/>
+                <input type="radio" name="answer7" value="C">C.快递小哥送货时间
+                <br/>
+                <input type="radio" name="answer7" value="D">D.收货人签收时间</li>
+        </div>
+        <div>
+            <li class="list-group-item">8.每当夜晚来临的时候，甲总是收到各种垃圾短信和电话，这种行为侵犯了甲的( )权利?
+                <br/><br/>
+                <input type="radio" name="answer8" value="A">A.名誉权
+                <br/>
+                <input type="radio" name="answer8" value="B">B.姓名权
+                <br/>
+                <input type="radio" name="answer8" value="C">C.隐私权
+                <br/>
+                <input type="radio" name="answer8" value="D">D.肖像权</li>
+        </div>
+        <div>
+            <li class="list-group-item">9.根据《中华人民共和国民法典》的规定，下列关于限制民事行为能力人的表述，哪一项是正确的?
+                <br/><br/>
+                <input type="radio" name="answer9" value="A">A.八周岁以上的未成年人是限制民事行为能力人
+                <br/>
+                <input type="radio" name="answer9" value="B">B.三周岁以上的未成年人是限制民事行为能力人
+                <br/>
+                <input type="radio" name="answer9" value="C">C.十六周岁以上的未成年人，以自己的劳动收入为主要生活来源的，依然是限制民事行为能力人
+                <br/>
+                <input type="radio" name="answer9" value="D">D.只要是未满十八周岁的未成年人，均是限制民事行为能力人</li>
+        </div>
+        <div>
+            <li class="list-group-item">10.耕地承包期限是多少年?
+                <br/><br/>
+                <input type="radio" name="answer10" value="A">A.十年
+                <br/>
+                <input type="radio" name="answer10" value="B">B.二十年
+                <br/>
+                <input type="radio" name="answer10" value="C">C.三十年
+                <br/>
+                <input type="radio" name="answer10" value="D">D.四十年</li>
+        </div>
+        <div class="text-center mt-2">
+            <input class="w-25 btn btn-primary" type="submit" value="提交"; id="submit">
+        </div>
+    </ul>
+    <div class="text-center">
+        <span id="Ainfo" class="text-danger"></span>
+    </div>
+    <footer class="mt-2">
+        <div>
+        </div>
+    </footer>
+    <div class="text-center">
+        <iframe class="list-group-item mx-auto mb-3" name="myIframe3"></iframe>
+    </div>
+    <div>
+    </div>
+</form>
+    </div>
+<script>
+    $("#submit").click(function (){
+        alert('已提交');
+    })
+    $(document).ready(function () {
+        //检查session是否含用户名
+        $.ajax({
+            url:"/user/session",
+            method: "POST",
+            dataType: "json",
+            success: function (res) {
+                console.log(res.result);
+                console.log(res.user);
+                if (res.result) {
+                    $("#loginDisplay").html("欢迎登陆，"+res.user.userName + "  ");
+                    $("#quit").text("退出");
+                    $("#center").text("用户中心");
+                } else {
+                    console.log(res.user);
+                }
+            }
+        });
+        $("#center").click(function () {
+            window.open("/user/question");
+        });
+        //退出按钮
+        $("#quit").click(function () {
+            $.ajax({
+                url:"/user/logout",
+                type: "get",
+                dataType:"json",
+                success:function (){
+                    console.log("quit success");
+                    $("#loginDisplay").html("\t\t\t\t\t<li class=\"nav-item active border-right border-white\">\n" +
+                        "\t\t\t\t\t\t<a class=\"badge text-white\" href=\"../login/login.html\">登录</a>\n" +
+                        "\t\t\t\t\t</li>\n" +
+                        "\t\t\t\t\t<li class=\"nav-item active\">\n" +
+                        "\t\t\t\t\t\t<a class=\"badge  text-white\" href=\"../login/register.html\">注册</a>\n" +
+                        "\t\t\t\t\t</li>");
+                    $("#quit").text("");
+                }
+            });
+            window.location.reload()
+        });
+    });
+</script>
+</body>
+</html>

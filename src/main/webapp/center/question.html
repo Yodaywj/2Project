@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>用户中心</title>
+    <link rel="stylesheet" href="../vendor/bootstrap-4.5.0-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../vendor/bootstrap-4.5.0-dist/css/bootstrap-table.min.css"/>
+    <link rel="stylesheet" href="../css/laws.css" type="text/css"/>
+    <link rel="stylesheet" href="../css/counter.css"/>
+    <script src="../js/juqery.js"></script>
+    <script src="../vendor/bootstrap-4.5.0-dist/js/bootstrap.bundle.min.js" ></script>
+    <script src="../vendor/bootstrap-4.5.0-dist/js/bootstrap.js" ></script>
+    <script src="../vendor/bootstrap-4.5.0-dist/js/bootstrap-table.min.js" ></script>
+</head>
+<style>
+    @media (min-width: 1200px) {
+        .container, .container-lg, .container-md, .container-sm, .container-xl {
+            max-width: 1400px;
+        }
+    }
+
+</style>
+<body class="bg-light">
+<!-- 导航栏 -->
+<nav class=" navbar navbar-expand-md navbar-dark mb-2" style="background-color: rgb(115, 115, 115);">
+    <a href="/"><img src="../image/logo_1.png" width="70px" height="70px"></a>
+    <div class="navbar-collapse">
+        <ul class="navbar-nav">
+            <li class="nav-item active mr-2 ">
+                <div class="dropdown">
+                    <button class="btn btn-dark text-white dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-expanded="false">
+                        民法典问答
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="../display/question1.html">问答一</a>
+                        <a class="dropdown-item" href="../display/question2.html">问答二</a>
+                        <a class="dropdown-item" href="../display/question3.html">问答三</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item active mr-2">
+                <a class="btn btn-dark text-white" href="../display/laws_all.html">法律全文</a>
+            </li>
+            <li class="nav-item active mr-2">
+                <a class="btn btn-dark text-white" href="../display/lawCase.html">案件实例</a>
+            </li>
+            <li class="nav-item active mr-2">
+                <a class="btn btn-dark text-white" href="/user/question">问答记录</a>
+            </li>
+        </ul>
+    </div>
+    <div class="d-flex justify-content-end">
+        <ul id="loginDisplay" class="navbar-nav">
+            <li class="nav-item active border-right border-white">
+                <a class="badge text-white" href="/user/toLogin">登录</a>
+            </li>
+            <li class="nav-item active">
+                <a class="badge  text-white" href="/user/toRegister">注册</a>
+            </li>
+        </ul>
+        &nbsp;&nbsp;
+        <div id="quit" class="btn badge badge-dark"></div>
+        &nbsp;&nbsp;
+    </div>
+</nav>
+<!-- 搜索栏 -->
+<div class="header container" style="margin-top: 20px !important;">
+    <table id="table-question"></table>
+    <div id="toolbar" class="btn-group">
+        <button id="btn-refresh" class="btn btn-light border">
+            <span class="glyphicon glyphicon-repeat">刷新</span>
+        </button>
+        <button id="btn-select" class="btn btn-light border" >
+            <span class="glyphicon glyphicon-repeat">查找</span>
+        </button>
+        <input id="input2" type="number" class="form-control ml-auto w-25" autocomplete="off" placeholder="显示记录数" value = "">
+        <!--<button id="btn-user" class="btn btn-light border" >
+            <span class="glyphicon glyphicon-repeat">查找</span>
+        </button>-->
+        <input id="input1" type="search" class="form-control ml-auto w-50 text-center" autocomplete="off" placeholder="查找对应用户">
+    </div>
+</div>
+<!-- 目录导航板块 -->
+<!-- 页脚部分 -->
+<!-- 页脚部分 -->
+<footer style="height: 20rem;margin-top: 30px!important;" class="mt-2">
+    <div style="background-color: #737373; height: 20rem;">
+        <p class="text-center text-info">
+            友情链接：<br />
+        </p>
+        <hr />
+        <p class="text-center">
+            <a class=" text-white" href="https://www.chinacourt.org/index.shtml" target="_blank">中国人民法院</a>
+        </p>
+        <hr />
+        <p class="text-center text-white">
+            <a class=" text-white" href="https://www.court.gov.cn/" target="_blank">最高人民法院</a>
+        </p>
+        <hr />
+        <p class="text-center text-white">
+            <a class=" text-white" href="https://wenshu.court.gov.cn/" target="_blank">裁判文书网</a>
+        </p>
+        <hr />
+        <div class="m-auto" style="width: 70px; margin: 100px;">
+            <a href="laws.html"><img src="../image/logo_1.png" style="width: 90px;height: 90px;" /></a>
+        </div>
+    </div>
+</footer>
+</body>
+
+<script>
+    $(document).ready(function () {
+        //检查session是否含用户名
+        $.ajax({
+            url:"/user/session",
+            method: "POST",
+            dataType: "json",
+            success: function (res) {
+                console.log(res.result);
+                console.log(res.user);
+                if (res.result) {
+                    $("#loginDisplay").html("欢迎登陆，"+res.user.userName + "  ");
+                    $("#quit").text("返回并退出");
+                    $("#center").text("用户中心");
+                } else {
+                    alert('你未登录，请先登录');
+                    window.location.href='/user/toLogin';
+                }
+            },
+            error:function (){
+                alert('你未登录，请先登录');
+                window.location.href='/user/toLogin';
+            }
+        });
+        $("#center").click(function () {
+            window.open("/user/question");
+        });
+        //退出按钮
+        $("#quit").click(function () {
+            $.ajax({
+                url:"/user/logout",
+                type: "get",
+                dataType:"json",
+                success:function (){
+                    window.location.href='/user/index';
+                },
+                error:function (){
+                    window.location.href='/user/index';
+                }
+            });
+        });
+        //获取数据函数
+        var dataGet = function () {
+            $.ajax({
+                url: '/question/list10',
+                type: "POST",
+                success: function (data) {
+                    if (data.result) {
+                        $('#table-question').bootstrapTable('load', data.rows);
+                    } else {
+                    }
+                }
+            })
+        };
+        var dataChange = function () {
+            var num=document.getElementById("input2").value;
+            var user=document.getElementById("input1").value;
+            if (num==''){
+                num=0;
+            }
+            $.ajax({
+                url: '/question/listnum',
+                type: "POST",
+                async:true,
+                data:{"num":num,"user":user},
+                success: function (data) {
+                    if (data.result) {
+                        $('#table-question').bootstrapTable('load', data.rows);
+                    } else {
+                        alert('查询失败');
+                    }
+                },
+                error:function(){
+                    //请求出错处理
+                }
+            })
+        };
+        dataGet();
+        $('#btn-user').click(function () {
+            dataChange();
+        });
+        $('#btn-refresh').click(function () {
+            dataGet();
+        });
+        $('#btn-select').click(function () {
+            dataChange();
+        });
+        $('#table-question').bootstrapTable({
+            toolbar: '#toolbar',
+            striped: true,
+            clickToSelect: true,
+            singleSelect: true,
+            idField: 'id',
+            height: 600,
+            columns: [
+                {
+                    title: "选择",
+                    checkbox: true
+                },{
+                    field: "type",
+                    title: "问卷名称",
+                    align: "center",
+                    sortable: "true"
+                }, {
+                    field: "userName",
+                    title: "调查人",
+                    align: "center",
+                    sortable: "true"
+                }, {
+                    field: "time",
+                    title: "调查时间",
+                    align: "center",
+                    sortable: "true"
+                }, {
+                    field: "answer1",
+                    title: "第一题",
+                    align: "center",
+                    sortable: "true"
+                }, {
+                    field: "answer2",
+                    title: "第二题",
+                    align: "center",
+                    sortable: "true"
+                }, {
+                    field: "answer3",
+                    title: "第三题",
+                    align: "center",
+                    sortable: "true"
+                }, {
+                    field: "answer4",
+                    title: "第四题",
+                    align: "center",
+                    sortable: "true"
+                }, {
+                    field: "answer5",
+                    title: "第五题",
+                    align: "center",
+                    sortable: "true"
+                }, {
+                    field: "answer6",
+                    title: "第六题",
+                    align: "center",
+                    sortable: "true"
+                }, {
+                    field: "answer7",
+                    title: "第七题",
+                    align: "center",
+                    sortable: "true"
+                }, {
+                    field: "answer8",
+                    title: "第八题",
+                    align: "center",
+                    sortable: "true"
+                }, {
+                    field: "answer9",
+                    title: "第九题",
+                    align: "center",
+                    sortable: "true"
+                }, {
+                    field: "answer10",
+                    title: "第十题",
+                    align: "center",
+                    sortable: "true"
+                }
+                , {
+                    field: "correct",
+                    title: "正确率",
+                    align: "center",
+                    sortable: "true"
+                }
+            ]
+        });
+    });
+</script>
+</html>

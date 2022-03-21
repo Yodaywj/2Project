@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>民法小助手</title>
+    <link rel="stylesheet" href="../vendor/bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/juqery.js"></script>
+    <script src="../vendor/pagenation/jqpaginator.min.js"></script>
+    <script src="../vendor/bootstrap-4.5.0-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/inputValidate.js"></script>
+    <script src="../js/echarts.js"></script>
+</head>
+<body class="no-gutters">
+<div class="top-nav">
+    <nav class="navbar navbar-light bg-light justify-content-md-start">
+        <a class="navbar-brand mr-3" href="#">
+            <a href="/"><img src="../image/logo_1.png" width="50px" height="50px" ></a>
+            民法小助手
+        </a>
+        <form class="form-inline my-2 my-lg-0 ml-3">
+            <div class="input-field ">
+                <div class="input-select form-control">
+                    <select data-trigger="" name="choices-single-defaul">
+                        <option placeholder="" class="no-gutters">法律条文</option>
+                        <option>典型案例</option>
+                        <option>裁判文书</option>
+                    </select>
+                </div>
+            </div>
+            <input id="inputWord" class="form-control" type="search" value="" placeholder="搜索关键字" aria-label="Search">
+            <input id="search" class="icon form-control" type="button"  value="搜索" aria-label="Search">
+        </form>
+    </nav>
+</div>
+<div class="container mt-2">
+    <div class="nav-container">
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">全部</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="result.html" tabindex="-1">法律条文</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link my-disabled"  aria-disabled="true" href="#">案例</a>
+            </li>
+        </ul>
+    </div>
+    <div class="appBar mt-n1 mb-3 text-secondary">
+        <div id="totalResult" class="d-inline-block ml-3">共153条结果</div>
+        <div id="duration" class="d-inline-block">(用时0.12秒)</div>
+    </div>
+    <div class="row bg-success"></div>
+    <div id="showResult" class="showResult row min-vh-100">
+
+        <div id="documents" class="col col-9">
+
+            <div class="item mb-3">
+                <div class="head"><a href="">title</a></div>
+                <div class="body border border-success" style="min-height: 48px;" >content</div>
+            </div>
+            <div class="item mb-3">
+                <div class="head"><a href="">title</a></div>
+                <div class="body">content</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="bottomNav ml-2 text-dark">共0页,当前第0页</div>
+    <nav class="Page navigation example">
+        <ul class="pagination" id="pagination"></ul>
+    </nav>
+</div>
+<footer style="background-color: #0B183D; color: #79C940">
+    联系方式：11011023
+</footer>
+</body>
+<script>
+    let keyword = document.getElementById("inputWord").value;
+    let totalNum = 13;
+    let pageSize = 13;
+    let currentPage = 1;
+    let searchResult;
+    let record_returnData_number = 0;
+    //此页面要存储的数据有currentPage，totalNum，keyword
+    $(function () {
+        flashJqpage();
+    });
+    $(document).ready(function () {
+        //1,获得url字符
+        // keyword = getUrlQueryString().keyword;
+        // if (typeof keyword!="undefined" && keyword.length !== 0) {
+        //     // myChart.showLoading();
+        //     flashJqpage();
+        //     //顺序不能变（垃圾代码）
+        //     flashSearchResult();
+        //     flashSearchInfo();
+        //     flashJqpage();
+        //     flashbBottomNav();
+        // }
+        //2,更新搜索结果
+        let res = JSON.parse(sessionStorage.getItem("searchDocumentInfo"));
+        if (res && res.length !== 0) {
+            let html = '';
+            let nHtml = '';
+            $.each(res, function (index,item) {
+                nHtml='<a href=\"'+getRootPath()+'search/document.html?id='+item.docId+'\">'+item.Title+"</a>"
+                if(nHtml.length > 135){
+                    nHtml = nHtml.substring(0,135);
+                    nHtml+='...';
+                }
+                html+=('<div class="item mb-3">'+
+                    '<div class="head">'+nHtml+'</div>'+
+                    '<div class="body border-success" style="min-height: 48px;" >'+'<a>'+item.content+'</div>'+
+                    '</div>');
+            });
+            if (res.length === 0) {
+                html = "<h2>没有搜索到相关结果，换个关键词吧！</h2>"
+            }
+            searchResult = res;
+            console.log(res);
+            $("#documents").html(html);
+            // 省略号
+            $(".---------item .body").each(function(){
+                const maxwidth = 135;
+                if($(this).text().length > maxwidth){
+                    $(this).text($(this).text().substring(0,maxwidth));
+                    $(this).html($(this).html()+'...');
+                }
+            });
+
+            //3,搜索信息更新
+            if (sessionStorage.getItem("DocumentTotalNum")) {
+                $("#totalResult").text("共"+sessionStorage.getItem("DocumentTotalNum")+"条结果");
+                $("#duration").text("(用时"+sessionStorage.getItem("DocumentTime")+"秒)");
+                totalNum = (Number)(sessionStorage.getItem("DocumentTotalNum"));
+            }
+
+            //4,底部信息更新
+            if (sessionStorage.getItem("DocumentCurrentPage")) {
+                $(".bottomNav").text("共"+Math.round(totalNum/pageSize)+"页,当前第"+
+                    (Number)(sessionStorage.getItem("DocumentCurrentPage"))+"页");
+                currentPage = (Number)(sessionStorage.getItem("DocumentCurrentPage"));
+            }
+
+            //5,分页更新 需要参数totalNum，pageSize，currentPage
+            flashJqpage();
+
+            //6,关键词
+            if (sessionStorage.getItem("documentKeyword")) {
+                $('#inputWord').val(sessionStorage.getItem("documentKeyword"));
+                console.log(sessionStorage.getItem("documentKeyword"));
+            }
+        } else {
+            $("#documents").html("你还没有开始搜索哦！");
+        }
+    })
+    $("#search").click(function (){
+        console.log(keyword);
+        console.log(document.getElementById("inputWord").value);
+        if (!checkService.isEmpty(keyword) && keyword !== document.getElementById("inputWord").value) {
+            currentPage = 1;
+            totalNum = 13;
+            keyword = document.getElementById("inputWord").value;
+            //顺序不能变（垃圾代码）
+            flashSearchResult();
+            flashSearchInfo();
+            flashJqpage();
+            flashbBottomNav();
+        } else if (keyword === document.getElementById("inputWord").value) {
+            flashSearchResult();
+            flashSearchInfo();
+            flashJqpage();
+            flashbBottomNav();
+        }
+        else if (checkService.isEmpty(keyword)){
+            alert("输入为空或不是汉字!");
+        }
+        sessionStorage.setItem("documentKeyword", keyword);
+
+    });
+    // 负责刷新搜索项和它的目录
+    function flashSearchResult() {
+        $.ajax({
+            type: "POST",
+            url: getRootPath()+"judicialDocument-search",
+            async: false,
+            data: { "keyword": keyword, "pageNo": (currentPage-1)*pageSize,"pageSize": pageSize },
+            dataType: "json",
+            success:function (res) {
+                let html = '';
+                let nHtml = '';
+                sessionStorage.setItem("searchDocumentInfo", JSON.stringify(res));
+                $.each(res, function (index,item) {
+                    nHtml='<a href=\"'+getRootPath()+'search/document.html?id='+item.docId+'\">'+item.Title+"</a>"
+                    if(nHtml.length > 135){
+                        nHtml = nHtml.substring(0,135);
+                        nHtml+='...';
+                    }
+                    html+=('<div class="item mb-3">'+
+                        '<div class="head">'+nHtml+'</div>'+
+                        '<div class="body border-success" style="min-height: 48px;" >'+'<a>'+item.content+'</div>'+
+                        '</div>');
+                });
+                if (res.length === 0) {
+                    html = "<h2>没有搜索到相关结果，换个关键词吧！</h2>"
+                }
+                searchResult = res;
+                console.log(res);
+                $("#documents").html(html);
+                // 省略号
+                $(".---------item .body").each(function(){
+                    const maxwidth = 135;
+                    if($(this).text().length > maxwidth){
+                        $(this).text($(this).text().substring(0,maxwidth));
+                        $(this).html($(this).html()+'...');
+                    }
+                });
+            }
+        });
+    }
+    function flashSearchInfo() {
+        $.ajax({
+            type: "POST",
+            url: getRootPath()+"documentSearch-info",
+            async: false,
+            dataType: "json",
+            success:function (res) {
+                let html = '';
+                totalNum = res.totalNum;
+                record_returnData_number = totalNum;
+                console.log(res);
+                $("#totalResult").text("共"+totalNum+"条结果");
+                $("#duration").text("(用时"+res.time+"秒)");
+                //搜索结果数为0则关闭图表
+                sessionStorage.setItem("DocumentTotalNum", (String)(totalNum));
+                sessionStorage.setItem(("DocumentTime"), (String)(res.time));
+            }
+        });
+    }
+    function flashbBottomNav() {
+        $(".bottomNav").text("共"+Math.round(totalNum/pageSize)+"页,当前第"+currentPage+"页");
+        sessionStorage.setItem("DocumentCurrentPage", (String)(currentPage));
+    }
+    //分页
+    function flashJqpage() {
+        $.jqPaginator('#pagination', {
+            // totalPages: 100, //设置分页的总页数
+            totalCounts: totalNum, //设置分页的总条目数
+            pageSize: pageSize,
+            visiblePages: 7, //设置最多显示的页码数（例如有100也，当前第1页，则显示1 - 7页）
+            currentPage: currentPage,//当前页
+            first: '<li class="first page-item"><a class="page-link" href="javascript:;">第一页</a></li>',
+            prev: '<li class="prev page-item"><a class="page-link" href="javascript:;">前一页</a></li>',
+            next: '<li class="next page-item"><a class="page-link" href="javascript:;">下一页</a></li>',
+            last: '<li class="last page-item"><a class="page-link" href="javascript:;">最后一页</a></li>',
+            page: '<li class="page page-item"><a class="page-link" href="javascript:;">{{page}}</a></li>',
+            onPageChange: function (num, type) {
+                //页面变化回调函数
+                if (type == "change") {
+                    console.log("当前页"+num);//当前页码
+                    currentPage = num;
+                    $('.text').html('当前第' + num + '页');
+                    if (checkService.isEmpty(keyword)) {
+                        alert("输入为空或不是汉字!");
+                    } else if (keyword === document.getElementById("inputWord").value) {
+                        flashSearchResult();
+                        flashbBottomNav();
+                    } else if (keyword !== document.getElementById("inputWord").value && !checkService.isEmpty(keyword)) {
+                        keyword = document.getElementById("inputWord").value;
+                        currentPage = 1;
+                        totalNum = 13;
+                        flashSearchResult();
+                        flashSearchInfo();
+                        flashJqpage();
+                        flashbBottomNav();
+                    }
+                }
+            }
+        });
+    }
+    function getRootPath(){
+        //获取当前网址
+        var curWwwPath=window.document.location.href;
+        //获取主机地址之后的目录
+        var pathName=window.document.location.pathname;
+        var pos=curWwwPath.indexOf(pathName);
+        //获取主机地址
+        var localhostPaht=curWwwPath.substring(0,pos);
+        //获取带"/“的项目名
+        var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+        return(localhostPaht+projectName+"/");
+    }
+</script>
+</html>
