@@ -15,7 +15,7 @@
         select * from tb_comment1 where id=#{id};
     </select>
     <select id="showNewCases" resultType="domain.Tb_Case">
-        select * from  tb_case where isShow='已发布';
+        select * from  tb_case where isShow='已发布' order by power desc,id;
     </select>
 
     <insert id="save" parameterType="domain.Tb_Comment">

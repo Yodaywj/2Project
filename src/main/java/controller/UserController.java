@@ -274,6 +274,13 @@ public class UserController {
         userMapper.setShow(id,isShow);
         return ResultEntity.success("修改成功");
     }
+    @RequestMapping("/powerChange")
+    @ResponseBody
+    public ResultEntity powerChange(int id, int power) {
+        userMapper.powerChange(id,power);
+        return ResultEntity.success("权重已修改");
+    }
+
 }
 
 

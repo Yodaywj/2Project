@@ -56,6 +56,9 @@
         </if>
         WHERE id=#{id};
     </update>
+    <update id="powerChange" parameterType="domain.Tb_Case">
+        update tb_case set power = #{power} where id=#{id};
+    </update>
     <delete id="deleteCase" parameterType="domain.Tb_Case">
         delete from tb_case where id=#{id};
     </delete>
@@ -64,6 +67,6 @@
         <if test="keyword != '@全部@'">
             where content like concat('%',#{keyword},'%')
         </if>
-        order by id desc limit 0,#{num};
+        order by id desc,power desc limit 0,#{num};
     </select>
 </mapper>

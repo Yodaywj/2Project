@@ -73,12 +73,9 @@
     <div>
         <table id="table-question"  class="table-borderless"></table>
     </div>
-    <div id="toolbar" class="btn-group container mt-3" style="width: 1300px">
+    <div id="toolbar" class="row btn-group container mt-3" style="width: 1400px;">
         <button id="btn-refresh" class="btn btn-light border" style="width: 150px">
             <span class="glyphicon glyphicon-repeat">刷新</span>
-        </button>
-        <button id="btn-select" class="btn btn-light border" style="width: 150px">
-            <span class="glyphicon glyphicon-repeat">查找</span>
         </button>
         <button id="btn-add" class="btn btn-light border" style="width: 200px">
             <span class="glyphicon glyphicon-repeat">新增文章</span>
@@ -92,14 +89,21 @@
         <button id="btn-show" class="btn btn-light border" style="width: 250px">
             <span class="glyphicon glyphicon-repeat">发布/取消发布</span>
         </button>
-        <button id="btn-delete" class="btn btn-light border" style="width: 250px">
+        <button id="btn-delete" class="btn btn-light border" style="width: 200px">
             <span class="glyphicon glyphicon-repeat">删除文章</span>
         </button>
-        <input id="input2" type="number" style="width: 200px" class="form-control ml-auto text-center" autocomplete="off" placeholder="显示记录数" value = "">
-        <!--<button id="btn-user" class="btn btn-light border" >
+        <button id="btn-powerChange" class="btn btn-light border" style="width: 200px">
+            <span class="glyphicon glyphicon-repeat">修改文章权重</span>
+        </button>
+        <input id="input3" type="number" style="width: 300px" class="form-control ml-auto
+        text-center" autocomplete="off" placeholder="文章按权重降序排列发布" min="0" max="10">
+        <button id="btn-select" class="btn btn-light border" style="width: 150px">
             <span class="glyphicon glyphicon-repeat">查找</span>
-        </button>-->
-        <input id="input1" type="search" style="width: 500px" class="form-control ml-auto  text-center" autocomplete="off" placeholder="查询案件实例">
+        </button>
+        <input id="input2" type="number" style="width: 200px"
+               class="form-control ml-auto text-center" autocomplete="off" placeholder="显示记录数" value = "">
+        <input id="input1" type="search" style="width: 400px"
+               class="form-control ml-auto  text-center" autocomplete="off" placeholder="查询案件实例">
     </div>
 </div>
 <div id="layout">
@@ -111,33 +115,14 @@
 </textarea>
     </div>
 </div>
-<footer style="height: 20rem;margin-top: 30px!important;" class="mt-2">
-    <div style="background-color: #737373; height: 20rem;">
-        <p class="text-center text-info">
-            友情链接：<br />
-        </p>
-        <hr />
-        <p class="text-center">
-            <a class=" text-white" href="https://www.chinacourt.org/index.shtml" target="_blank">中国人民法院</a>
-        </p>
-        <hr />
-        <p class="text-center text-white">
-            <a class=" text-white" href="https://www.court.gov.cn/" target="_blank">最高人民法院</a>
-        </p>
-        <hr />
-        <p class="text-center text-white">
-            <a class=" text-white" href="https://wenshu.court.gov.cn/" target="_blank">裁判文书网</a>
-        </p>
-        <hr />
-        <div class="m-auto" style="width: 70px; margin: 100px;">
-            <a href="laws.html"><img src="../image/logo_1.png" style="width: 90px;height: 90px;" /></a>
-        </div>
-    </div>
-</footer>
 <!--<script src="../js/jquery.min.js"></script>-->
 <script src="../lib/editormd/editormd.js"></script>
 <script src="../lib/editormd/lib/marked.min.js"></script>
 <script>
+    let input3 = document.getElementById("input3")
+    input3.addEventListener("keydown",()=>{
+        input3.value="";
+    })
     $(document).ready(function () {
         //检查session是否含用户名
         $.ajax({
@@ -285,6 +270,22 @@
                 }
             });
         });
+        $("#btn-powerChange").click(()=>{
+            const power = input3.value;
+            var a = document.getElementsByClassName("selected")
+            var id = a.item(0).getElementsByTagName("td").item(1).innerHTML;
+            $.ajax({
+                url: '/user/powerChange',
+                type: "POST",
+                data:{"id":id,"power":power},
+                success: function (data) {
+                    alert(data.message)
+                    a.item(0).getElementsByTagName("td").item(5).innerHTML=power;
+                },error:function(){
+                    alert("错误");
+                }
+            })
+        });
         $('#btn-delete').click(function () {
             var a = document.getElementsByClassName("selected")
             var id = a.item(0).getElementsByTagName("td").item(1).innerHTML;
@@ -346,7 +347,7 @@
             clickToSelect: true,
             singleSelect: true,
             idField: 'id',
-            height: 600,
+            height: 800,
             columns: [
                 {
                     title: "选择",
@@ -369,6 +370,11 @@
                 }, {
                     field: "isShow",
                     title: "发布状态",
+                    align: "center",
+                    sortable: "true"
+                },{
+                    field: "power",
+                    title: "权重",
                     align: "center",
                     sortable: "true"
                 }
@@ -398,6 +404,7 @@
             });
         });
     });
+
 </script>
 </body>
 </html>

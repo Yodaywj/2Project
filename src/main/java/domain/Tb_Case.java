@@ -7,6 +7,16 @@ public class Tb_Case {
 
     private String isShow;
 
+    private int power;
+
+    public int getPower() {
+        return power;
+    }
+
+    public void setPower(int power) {
+        this.power = power;
+    }
+
     public String getIsShow() {
         return isShow;
     }

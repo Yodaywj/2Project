@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +18,7 @@
 <body>
 <div>
     <nav class=" navbar navbar-expand-md navbar-dark" style="background-color: rgb(115, 115, 115);">
-        <a href="/"><img src="../image/logo_1.png" width="70px" height="70px"></a>
+        <a href="/" id="indexAll"><img src="../image/logo_1.png" width="70px" height="70px"></a>
         <div class="navbar-collapse">
             <ul class="navbar-nav">
                 <li class="nav-item active mr-2 ">
@@ -57,15 +56,11 @@
             </ul>
             &nbsp;&nbsp;
             <div id="sayHi" class="badge badge-info mr-3"></div>
-<div id="quit" class="btn badge badge-dark"></div>
+            <div id="quit" class="btn badge badge-dark"></div>
             &nbsp;&nbsp;<div id="edit" class="btn badge badge-dark"></div>
         </div>
     </nav>
-    <div class="mt-4 mr-4 d-block m-0 ml-auto" style="width: 200px">
-        <button id="hideAll" class="btn btn-secondary btn-lg border">
-            <span class="glyphicon glyphicon-repeat text-nowrap">展开</span>
-        </button>
-    </div>
+
     <div id="cases" class="container-fluid">
         <div class="row">
             <div class="col" id="cases1"></div>
@@ -73,7 +68,18 @@
         </div>
     </div>
 </div>
-
+<div class="mt-4 mr-4 d-block m-0 ml-auto" style="width: 300px">
+    <div class="row">
+        <button id="hideAll" class="btn btn-secondary btn-lg border">
+            <span class="glyphicon glyphicon-repeat text-nowrap">展开</span>
+        </button>
+        <button id="pageChange" class="btn btn-secondary btn-lg border">
+            <span class="glyphicon glyphicon-repeat text-nowrap">跳转</span>
+        </button>
+        <input id="inputPage" type="number" value="" class="form-control" autocomplete="off"
+               min="1" maxlength="3" style="height: 48px;width: 100px;">
+    </div>
+</div>
 <div class="header container mb-3" style="margin-top: 20px !important;">
     <header>
         <h3 class="text-center mt-3 mb-3" id="commentBar">留言板</h3>
@@ -89,8 +95,10 @@
         <button id="find" class="btn btn-light border">
             <span class="glyphicon glyphicon-repeat text-nowrap">查找</span>
         </button>
-        <input id="input2" type="number" value = "" class="form-control ml-auto" autocomplete="off" placeholder="显示留言数" style="width: 200px">
-        <input id="input1" type="search" class="form-control ml-auto" autocomplete="off" placeholder="查找对应用户" style="width: 200px">
+        <input id="input2" type="number" value="" class="form-control ml-auto" autocomplete="off" placeholder="显示留言数"
+               style="width: 200px">
+        <input id="input1" type="search" class="form-control ml-auto" autocomplete="off" placeholder="查找对应用户"
+               style="width: 200px">
     </div>
 </div>
 <div id="layout">
@@ -100,80 +108,129 @@
     </div>
     <button class="btn btn-primary mb-5" onclick="comment()" style="margin-left: 200px;">提交</button>
 </div>
-<link rel="stylesheet" href="../lib/editormd/css/editormd.css" />
+<link rel="stylesheet" href="../lib/editormd/css/editormd.css"/>
 <script src="../lib/editormd/editormd.js"></script>
 <script src="../lib/editormd/lib/marked.min.js"></script>
 <script>
     const displayMap = new Map();
     let change = true;
-    const hideAll = ()=>{
-        displayMap.forEach((val,key)=>{
-            if(change===true){
+    let renderArea = 'cases1';
+    let casesNum = 0;
+    let content = [];
+    let judgment = [];
+    let contentRender = [];
+    let judgmentRender = []
+    let groupIndex = 0;
+    let maxPage;
+    let currentPage = 1;
+    let cases;
+    let divNum = 4;
+    let inputPage=1;
+    $("#pageChange").click(()=>{
+        inputPage = Math.ceil(document.getElementById("inputPage").value);
+        if (inputPage>maxPage||inputPage<1){
+            $("#cases1").html("<h1 class='text-center'>空</h1>");
+            $("#cases2").html("<h1 class='text-center'>共"+maxPage+"页</h1>");
+            window.location.hash="#cases1"
+            currentPage=0;
+        }
+        else if (inputPage!==currentPage){
+            groupIndex=inputPage-1;
+            currentPage=inputPage;
+            renderArea = 'cases1';
+            pageRender();
+        }
+    })
+    const hideAll = () => {
+        displayMap.forEach((val, key) => {
+            if (change === true) {
                 $("#hideAll").text("收起");
-                if($("#"+val).css("display")==="none"){
-                    $("#"+key).click();
+                if ($("#" + val).css("display") === "none") {
+                    $("#" + key).click();
                 }
-            }else {
+            } else {
                 $("#hideAll").text("展开");
-                if($("#"+val).css("display")==="block"){
-                    $("#"+key).click();
+                if ($("#" + val).css("display") === "block") {
+                    $("#" + key).click();
 
                 }
             }
         })
-        change=!change;
+        change = !change;
     }
-    $("#hideAll").click(()=>{
+    $("#hideAll").click(() => {
         hideAll();
     });
-    var casesGet = function (){
+    var casesGet = function () {
         $.ajax({
             url: '/comment/showNewCases',
             async: false,
             type: "POST",
             success: function (data) {
-                let renderArea = 'cases1';
-                for (let val in data.cases){
+                cases = data.cases;
+                for (let val in data.cases) {
                     data.cases[val]["content"] = marked.parse(data.cases[val]["content"]);
                     data.cases[val]["judgment"] = marked.parse(data.cases[val]["judgment"]);
-                    caseMap='c'+data.cases[val]["id"];
-                    judgmentMap='j'+data.cases[val]["id"];
-                    btnMap='b'+data.cases[val]["id"];
-                    displayMap.set(btnMap,judgmentMap);
-                    let htmladd='';
-                    let htmlrender='';
-                    htmladd+='<div class="row-sm-6 my-4 mx-2" id="'+caseMap+'">';
-                    htmladd+='<div class="card">';
-                    htmladd+='<div class="card-body  overflow-auto" style="height: 380px;">';
-                    htmladd+=data.cases[val]["content"];
-                    htmladd+='<button id="'+btnMap+'" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#'+judgmentMap+'">查看判决</button>';
-                    htmladd+='</div>';
-                    htmladd+='</div>';
-                    htmladd+='</div>';
-                    htmlrender+='<div class="row mx-4">';
-                    htmlrender+='<div id="'+judgmentMap+'" class="col collapse" data-parent="#'+judgmentMap+'">';
-                    htmlrender+='<div class="card">';
-                    htmlrender+='<div class="card-body overflow-auto" style="height: 380px;">';
-                    htmlrender+=data.cases[val]["judgment"];
-                    htmlrender+='</div>';
-                    htmlrender+='</div>';
-                    htmlrender+='</div>';
-                    htmlrender+='</div>';
-                    if(renderArea==='cases1'){
-                        $("#cases1").append(htmladd);
-                        $("#cases1").append(htmlrender);
-                        renderArea='cases2'
-                    }else {
-                        $("#cases2").append(htmladd);
-                        $("#cases2").append(htmlrender);
-                        renderArea='cases1'
-                    }
+                    content[casesNum] = data.cases[val]["content"];
+                    judgment[casesNum] = data.cases[val]["judgment"]
+                    caseMap = 'c' + data.cases[val]["id"];
+                    judgmentMap = 'j' + data.cases[val]["id"];
+                    btnMap = 'b' + data.cases[val]["id"];
+                    displayMap.set(btnMap, judgmentMap);
+                    let htmladd = '';
+                    let htmlrender = '';
+                    htmladd += '<div class="row-sm-6 my-4 mx-2" id="' + caseMap + '">';
+                    htmladd += '<div class="card">';
+                    htmladd += '<div class="card-body  overflow-auto" style="height: 385px;">';
+                    htmladd += data.cases[val]["content"];
+                    htmladd += '<button id="' + btnMap + '" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#' + judgmentMap + '">查看判决</button>';
+                    htmladd += '</div>';
+                    htmladd += '</div>';
+                    htmladd += '</div>';
+                    htmlrender += '<div class="row mx-4">';
+                    htmlrender += '<div id="' + judgmentMap + '" class="col collapse" data-parent="#' + judgmentMap + '">';
+                    htmlrender += '<div class="card">';
+                    htmlrender += '<div class="card-body overflow-auto" style="height: 385px;">';
+                    htmlrender += data.cases[val]["judgment"];
+                    htmlrender += '</div>';
+                    htmlrender += '</div>';
+                    htmlrender += '</div>';
+                    htmlrender += '</div>';
+                    contentRender[casesNum] = htmladd;
+                    judgmentRender[casesNum] = htmlrender;
+                    casesNum += 1;
                 }
+                maxPage = Math.ceil(casesNum/divNum);
+                pageRender();
+                document.getElementById("inputPage").setAttribute("placeholder","共"+maxPage+"页");
+                document.getElementById("inputPage").setAttribute("max",maxPage);
             },
-            error: function (){
+            error: function () {
                 alert("wrong");
             }
         })
+    }
+    const pageRender = ()=>{
+        let cases1="";
+        let cases2="";
+        let firstCases = divNum * groupIndex;
+        for (let i = firstCases; i < firstCases + divNum; i++) {
+            if (i<casesNum){
+                if (renderArea === 'cases1') {
+                    cases1+=contentRender[i];
+                    cases1+=judgmentRender[i];
+                    renderArea = 'cases2'
+                } else {
+                    cases2+=contentRender[i];
+                    cases2+=judgmentRender[i];
+                    renderArea = 'cases1'
+                }
+            }
+        }
+        $("#cases1").html(cases1);
+        $("#cases2").html(cases2);
+        window.location.hash="#commentBar"
+        window.location.hash="#c"+cases[divNum*groupIndex]["id"];
     }
     var dataGet = function () {
         $.ajax({
@@ -185,16 +242,16 @@
         })
     };
     var dataChange = function () {
-        var num=document.getElementById("input2").value;
-        var user=document.getElementById("input1").value;
-        if (num==''){
-            num=0;
+        var num = document.getElementById("input2").value;
+        var user = document.getElementById("input1").value;
+        if (num == '') {
+            num = 0;
         }
         $.ajax({
             url: '/comment/listComment',
             type: "POST",
-            async:true,
-            data:{"num":num,"user":user},
+            async: true,
+            data: {"num": num, "user": user},
             success: function (data) {
                 if (data.result) {
                     $('#table-question').bootstrapTable('load', data.rows);
@@ -202,7 +259,7 @@
                     alert('查询失败');
                 }
             },
-            error:function(){
+            error: function () {
                 //请求出错处理
             }
         })
@@ -210,17 +267,15 @@
     $('#find').click(function () {
         dataChange();
     });
-    $('#refresh').click(function (){
+    $('#refresh').click(function () {
         dataGet();
     })
     const comment = function () {
         var correct = document.getElementById("caseChange").value;
         correct = marked.parse(correct);
-        if (correct.match(/^[ ]*$/))
-        {
+        if (correct.match(/^[ ]*$/)) {
             alert('不能为空');
-        }
-        else {
+        } else {
             $.ajax({
                 url: '/comment/add',
                 type: "POST",
@@ -234,7 +289,7 @@
                     } else {
                         console.log(data);
                         alert(data.message)
-                        if(data.message=='请先登录'){
+                        if (data.message == '请先登录') {
                             window.location.href = '/user/toLogin';
                         }
                         //	alert(data.message, "错误", null);
@@ -274,7 +329,7 @@
     $(document).ready(function () {
         //检查session是否含用户名
         $.ajax({
-            url:"/user/session",
+            url: "/user/session",
             method: "POST",
             dataType: "json",
             success: function (res) {
@@ -282,10 +337,10 @@
                 console.log(res.user);
                 if (res.result) {
                     $("#loginDisplay").html("  ");
-                    $("#sayHi").text("欢迎登陆，"+res.user.userName);
+                    $("#sayHi").text("欢迎登陆，" + res.user.userName);
                     $("#quit").text("退出");
                     $("#center").text("用户中心");
-                    if (res.user.admin==='管理员'){
+                    if (res.user.admin === '管理员') {
                         $("#edit").text("用户管理");
                     }
                 } else {
@@ -294,7 +349,7 @@
             }
         });
         $("#edit").click(function () {
-            window.location.href="/display/lawCaseEdit.html";
+            window.location.href = "/display/lawCaseEdit.html";
         });
         $("#center").click(function () {
             window.open("/user/question");
@@ -302,10 +357,10 @@
         //退出按钮
         $("#quit").click(function () {
             $.ajax({
-                url:"/user/logout",
+                url: "/user/logout",
                 type: "get",
-                dataType:"json",
-                success:function (){
+                dataType: "json",
+                success: function () {
                     console.log("quit success");
                     $("#loginDisplay").html("\t\t\t\t\t<li class=\"nav-item active border-right border-white\">\n" +
                         "\t\t\t\t\t\t<a class=\"badge text-white\" href=\"../login/login.html\">登录</a>\n" +
@@ -326,7 +381,7 @@
             clickToSelect: true,
             singleSelect: true,
             idField: 'id',
-            height: 600,
+            height: 500,
             columns: [
                 {
                     title: "选择",
@@ -357,22 +412,22 @@
     });
     var testEditor;
 
-    $(function() {
+    $(function () {
         testEditor = editormd("test-editormd", {
-            width   : "80%",
-            height  : 300,
-            syncScrolling : "single",
-            path    : "../lib/editormd/lib/",
-            saveHTMLToTextarea : true,    // 保存 HTML 到 Textarea
+            width: "80%",
+            height: 300,
+            syncScrolling: "single",
+            path: "../lib/editormd/lib/",
+            saveHTMLToTextarea: true,    // 保存 HTML 到 Textarea
             emoji: true,
-            tex : true,                   // 开启科学公式TeX语言支持，默认关闭
-            flowChart : true,             // 开启流程图支持，默认关闭
-            sequenceDiagram : true,       // 开启时序/序列图支持，默认关闭,
+            tex: true,                   // 开启科学公式TeX语言支持，默认关闭
+            flowChart: true,             // 开启流程图支持，默认关闭
+            sequenceDiagram: true,       // 开启时序/序列图支持，默认关闭,
             //图片上传
-            imageUpload : true,
-            imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-            imageUploadURL : "/article/file/upload", //图片上传路径
-            onload : function() {
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "/article/file/upload", //图片上传路径
+            onload: function () {
                 console.log('onload', this);
                 casesGet();
             }

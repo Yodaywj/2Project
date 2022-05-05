@@ -25,4 +25,6 @@ public interface UserMapper {
     List<Tb_Case> showCase(@Param("num") int num, @Param("keyword") String keyword);
 
     void setShow(@Param("id") int id, @Param("isShow")String isShow);
+
+    void powerChange(@Param("id") int id, @Param("power")int power);
 }
