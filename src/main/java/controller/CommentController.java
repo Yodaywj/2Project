@@ -1,6 +1,7 @@
 package controller;
 
 import domain.ResultEntity;
+import domain.Tb_Case;
 import domain.Tb_Comment;
 import domain.Tb_User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +68,7 @@ public class CommentController {
         Tb_User u = (Tb_User) request.getSession().getAttribute("user");
         Tb_Comment questions = commentService.listid(id);
         ResultEntity resultEntity = new ResultEntity();
-        if (questions.getUserName().equals(u.getUserName())) {
+        if (questions.getUserName().equals(u.getUserName())||u.getAdmin().equals("管理员")) {
             commentService.del(id);
             resultEntity.setResult(true);
             return resultEntity;
@@ -85,18 +86,32 @@ public class CommentController {
             String correct = request.getParameter("correct");
             Tb_Comment t = new Tb_Comment();
             Tb_User u = (Tb_User) request.getSession().getAttribute("user");
-            t.setUserName(u.getUserName());
-            t.setcorrect(correct);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            java.util.Date date = new java.util.Date();
-            String str = sdf.format(date);
-            t.settime(str);
-            commentService.save(t);
-            ResultEntity resultEntity = new ResultEntity();
-            resultEntity.setResult(true);
-            return resultEntity;
+            if (u == null) throw new Exception("");
+            if (u.getState().equals("禁言")){
+                return ResultEntity.failure("该账户已禁言");
+            } else {
+                t.setUserName(u.getUserName());
+                t.setcorrect(correct);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                java.util.Date date = new java.util.Date();
+                String str = sdf.format(date);
+                t.settime(str);
+                commentService.save(t);
+                ResultEntity resultEntity = new ResultEntity();
+                resultEntity.setResult(true);
+                return ResultEntity.success("留言成功");
+            }
         } catch (Exception e) {
-            return ResultEntity.failure("失败");
+            return ResultEntity.failure("请先登录");
         }
+    }
+    @RequestMapping("/showNewCases")
+    @ResponseBody
+    public ResultEntity showNewCases() {
+        List<Tb_Case> cases = commentService.showNewCases();
+        ResultEntity result = new ResultEntity();
+        result.setResult(true);
+        result.setOther("cases",cases);
+        return result;
     }
 }

@@ -57,8 +57,9 @@
 				</li>
 			</ul>
 			&nbsp;&nbsp;
-			<div id="quit" class="btn badge badge-dark"></div>
-			&nbsp;&nbsp;
+			<div id="sayHi" class="badge badge-info mr-3"></div>
+<div id="quit" class="btn badge badge-dark"></div>
+			&nbsp;&nbsp;<div id="edit" class="btn badge badge-dark"></div>
 		</div>
 	</nav>
 	<div class="container ">
@@ -210,13 +211,20 @@
 					console.log(res.result);
 					console.log(res.user);
 					if (res.result) {
-						$("#loginDisplay").html("欢迎登陆，"+res.user.userName + "  ");
+						$("#loginDisplay").html("  ");
+                    $("#sayHi").text("欢迎登陆，"+res.user.userName);
 						$("#quit").text("退出");
 						$("#center").text("用户中心");
+						if (res.user.admin==='管理员'){
+							$("#edit").text("用户管理");
+						}
 					} else {
 						console.log(res.user);
 					}
 				}
+			});
+			$("#edit").click(function () {
+				window.location.href="/display/lawCaseEdit.html";
 			});
 			$("#center").click(function () {
 				window.open("/user/question");

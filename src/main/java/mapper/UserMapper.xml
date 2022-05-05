@@ -6,13 +6,64 @@
     <!--因为数据库中字段和实体类属性 完全一致 所以可以用 resultType 不然就要用resultMap做一下映射-->
 
     <select id="login" resultType="domain.Tb_User">
-        select * from tb_user where userName=#{userName};
+        select * from tb_user1 where userName=#{userName};
     </select>
 
+    <select id="select" resultType="domain.Tb_User">
+        select * from tb_user1
+        <if test="user != ''">
+            where userName = #{user}
+        </if>
+        order by id asc limit 0,#{num};
+    </select>
+
+    <delete id="delete" parameterType="domain.Tb_User">
+        delete from tb_user1 where id=#{id};
+    </delete>
 
     <insert id="save" parameterType="domain.Tb_User">
-            insert into tb_user(userName,password)
+            insert into tb_user1(userName,password)
             values (#{userName},#{password})
     </insert>
 
+    <update id="mute" parameterType="domain.Tb_User">
+        UPDATE tb_user1
+        <if test="state == '禁言'">
+            SET state = '正常'
+        </if>
+        <if test="state == '正常'">
+            SET state = '禁言'
+        </if>
+            WHERE id=#{id};
+    </update>
+    <insert id="addCase" parameterType="domain.Tb_Case">
+        insert into tb_case(content,judgment)
+        values ('未编辑','未编辑')
+    </insert>
+    <update id="editCase" parameterType="domain.Tb_Case">
+        update tb_case set content = #{content} WHERE id=#{id};
+    </update>
+    <update id="editJudgment" parameterType="domain.Tb_Case">
+        update tb_case set judgment = #{judgment} WHERE id=#{id};
+    </update>
+    <update id="setShow" parameterType="domain.Tb_Case">
+        UPDATE tb_case
+        <if test="isShow == '未发布'">
+            SET isShow = '已发布'
+        </if>
+        <if test="isShow == '已发布'">
+            SET isShow = '未发布'
+        </if>
+        WHERE id=#{id};
+    </update>
+    <delete id="deleteCase" parameterType="domain.Tb_Case">
+        delete from tb_case where id=#{id};
+    </delete>
+    <select id="showCase" resultType="domain.Tb_Case">
+        select * from tb_case
+        <if test="keyword != '@全部@'">
+            where content like concat('%',#{keyword},'%')
+        </if>
+        order by id desc limit 0,#{num};
+    </select>
 </mapper>

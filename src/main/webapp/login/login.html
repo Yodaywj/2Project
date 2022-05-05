@@ -11,7 +11,7 @@
 <!-- 导航栏 -->
 
 
-<div class="container align-self-center pt-5 border border-success">
+<div class="container align-self-center py-5 border border-primary" style="background-color: rgba(248,248,255,2);border-radius: 1em;">
     <div class="top-nav text-center py-1">登录</div>
     <div class="mid-body mx-auto w-25">
         <form class="list-group" onsubmit="return func1()" action="/user/login" method="post">
@@ -36,6 +36,9 @@
             </div>
             <div class="col-auto">
                 <input id="signIn" type="submit" class="btn btn-primary mb-2" value="登录">
+            </div>
+            <div class="col-auto">
+                <div class="small d-inline"><a href="/user/Admin">管理员登录</a></div>
             </div>
             <div class="col-auto">
                 <div class="small d-inline">没有账号？立即<a href="/user/toRegister">注册</a></div>

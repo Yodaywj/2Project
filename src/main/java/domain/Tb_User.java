@@ -4,6 +4,28 @@ public class Tb_User {
     private Integer id;     //自增长id
     private String userName;    //用户名
     private String password;    //密码
+    private String state;
+
+    private String admin;
+
+    public String getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(String admin) {
+        this.admin = admin;
+    }
+
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+
 
     public Integer getId() {
         return id;

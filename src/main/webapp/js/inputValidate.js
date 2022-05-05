@@ -8,9 +8,13 @@ $(document).ready(function () {
             console.log(res.result);
             console.log(res.user);
             if (res.result) {
-                $("#loginDisplay").html("欢迎登陆，"+res.user.userName + "  ");
+                $("#loginDisplay").html("  ");
+                    $("#sayHi").text("欢迎登陆，"+res.user.userName);
                 $("#quit").text("退出");
                 $("#center").text("用户中心");
+                if (res.user.admin==='管理员'){
+                    $("#edit").text("用户管理");
+                }
             } else {
                 alert('123');
             }

@@ -34,6 +34,10 @@
             <mvc:exclude-mapping path="/question/answer"/>
             <mvc:exclude-mapping path="/user/question"/>
             <mvc:exclude-mapping path="/comment/listComment"/>
+            <mvc:exclude-mapping path="/user/Admin"/>
+            <mvc:exclude-mapping path="/user/admin"/>
+            <mvc:exclude-mapping path="/comment/add"/>
+            <mvc:exclude-mapping path="/comment/showNewCases"/>
 
             <bean class="interceptor.IpInterceptor"/>
         </mvc:interceptor>

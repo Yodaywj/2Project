@@ -1,5 +1,6 @@
 package mapper;
 
+import domain.Tb_Case;
 import domain.Tb_Comment;
 
 import org.apache.ibatis.annotations.Param;
@@ -14,4 +15,6 @@ public interface CommentMapper {
     Tb_Comment selid(int id);
 
     void del(int id);
+
+    List<Tb_Case> showNewCases();
 }

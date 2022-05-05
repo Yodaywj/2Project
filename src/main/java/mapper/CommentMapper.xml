@@ -5,20 +5,23 @@
 <mapper namespace="mapper.CommentMapper">
 
     <select id="Findall" resultType="domain.Tb_Comment">
-        select * from tb_comment
+        select * from tb_comment1
         <if test="user != ''">
             where userName = #{user}
         </if>
         order by time desc limit 0,#{num};
     </select>
     <select id="selid" resultType="domain.Tb_Comment">
-        select * from tb_comment where id=#{id};
+        select * from tb_comment1 where id=#{id};
+    </select>
+    <select id="showNewCases" resultType="domain.Tb_Case">
+        select * from  tb_case where isShow='已发布';
     </select>
 
     <insert id="save" parameterType="domain.Tb_Comment">
-        insert into tb_comment(correct,userName,time) values (#{correct},#{userName},#{time})
+        insert into tb_comment1(correct,userName,time) values (#{correct},#{userName},#{time})
     </insert>
     <delete id="del" parameterType="domain.Tb_Comment">
-        delete from tb_comment where id=#{id};
+        delete from tb_comment1 where id=#{id};
     </delete>
 </mapper>

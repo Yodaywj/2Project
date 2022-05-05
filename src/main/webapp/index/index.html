@@ -50,8 +50,10 @@
 					</li>
 				</ul>
 				&nbsp;&nbsp;
-				<div id="quit" class="btn badge badge-dark"></div>
+				<div id="sayHi" class="badge badge-info mr-3"></div>
+<div id="quit" class="btn badge badge-dark"></div>
 				&nbsp;&nbsp;
+				<div id="edit" class="btn badge badge-dark"></div>
 				<!--<div id="center" class="btn badge badge-dark"></div>-->
 			</div>
 
@@ -581,25 +583,6 @@
 			</div>
 		</footer>
 	</body>
-				<!-- 页脚部分 -->
-		<!-- <footer style="background-color: #0B183D; color: #79C940;" class="my-2 py-5 text-white">
-			<div class="row pl-5 py-5">
-				<div class="col-4">
-					<div class="row">友情链接：</div>
-					<div class="row"><a href="">中国人民法院</a></div>
-					<div class="row"><a href="">最高人民法院</a></div>
-					<div class="row"><a href="">裁判文书网</a></div>
-				</div>
-				<div class="col-4">
-					<div class="row"></div>
-				</div>
-				<div class="col-4"></div>
-			</div>
-				<div class="m-auto" style="width: 11.9375rem; margin: 100px;">
-					<a href="asddsa.html"><img src="../image/logo_1.png" /></a>
-				</div>
-		</footer> -->
-		<!-- 页脚部分 -->
 
 	<script>
 		$(document).ready(function () {
@@ -611,15 +594,22 @@
 				dataType: "json",
 				success: function (res) {
 					console.log(res.result);
-					console.log(res.user);
+					console.log(res);
 					if (res.result) {
-						$("#loginDisplay").html("欢迎登陆，"+res.user.userName + "  ");
+						$("#loginDisplay").html("  ");
+                    $("#sayHi").text("欢迎登陆，"+res.user.userName);
 						$("#quit").text("退出");
 						$("#center").text("用户中心");
+						if (res.user.admin==='管理员'){
+							$("#edit").text("用户管理");
+						}
 					} else {
 						console.log(res.user);
 					}
 				}
+			});
+			$("#edit").click(function () {
+				window.location.href="/display/lawCaseEdit.html";
 			});
 			$("#center").click(function () {
 				window.open("/user/question");
@@ -686,17 +676,9 @@
 		}
 		//搜索按钮1
 		$("#searchBtn1").click(function () {
-			alert('功能暂不可用');
-			window.location.href="../search/result.html";
+			alert('这个是摆设,试试其他的吧');
+			window.location.href="../display/lawCase.html#commentBar";
 		});
-		function invalid(){
-			let select;
-			let target
-			select=confirm("暂时没有推荐文章，要欣赏好看的壁纸吗？");
-			if (select){
-				window.location.href='../display/beauty.html';
-			}
-		}
 	</script>
 <!--	<script>-->
 <!--		function counter(){-->

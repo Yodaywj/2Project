@@ -4,6 +4,7 @@
     <option name="state">
       <map>
         <entry key="file://$PROJECT_DIR$/src/main/webapp/center/question.html" value="file://$PROJECT_DIR$/src/main/webapp/center" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/display/add_case.html" value="file://$PROJECT_DIR$/src/main/webapp/display" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/display/lawCase.html" value="file://$PROJECT_DIR$/src/main/webapp/display" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/display/laws_all.html" value="file://$PROJECT_DIR$/src/main/webapp/display" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/index/index.html" value="file://$PROJECT_DIR$/src/main/webapp/index" />

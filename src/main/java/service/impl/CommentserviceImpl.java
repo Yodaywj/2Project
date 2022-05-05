@@ -3,9 +3,9 @@ package service.impl;
 //import service.CommentService;
 
 
+import domain.Tb_Case;
 import domain.Tb_Comment;
 import mapper.CommentMapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.CommentService;
@@ -39,4 +39,9 @@ public class CommentserviceImpl implements CommentService {
   public void del(int id) {
     commentMapper.del(id);
   }
+
+    @Override
+    public List<Tb_Case> showNewCases() {
+       return commentMapper.showNewCases();
+    }
 }

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>文章编辑</title>
+    <link rel="stylesheet" href="../vendor/bootstrap-4.5.0-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../vendor/bootstrap-4.5.0-dist/css/bootstrap-table.min.css"/>
+    <link rel="stylesheet" href="../css/laws.css" type="text/css"/>
+    <link rel="stylesheet" href="../lib/editormd/css/editormd.css" />
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
+    <script src="../js/juqery.js"></script>
+    <script src="../vendor/bootstrap-4.5.0-dist/js/bootstrap.bundle.min.js" ></script>
+    <script src="../vendor/bootstrap-4.5.0-dist/js/bootstrap.js" ></script>
+    <script src="../vendor/bootstrap-4.5.0-dist/js/bootstrap-table.min.js" ></script>
+</head>
+<style>
+    @media (min-width: 1200px) {
+        .container, .container-lg, .container-md, .container-sm, .container-xl {
+            max-width: 1400px;
+        }
+    }
+</style>
+<body class="bg-light">
+<nav class=" navbar navbar-expand-md navbar-dark mb-2" style="background-color: rgb(115, 115, 115);">
+    <a href="/"><img src="../image/logo_1.png" width="70px" height="70px"></a>
+    <div class="navbar-collapse">
+        <ul class="navbar-nav">
+            <li class="nav-item active mr-2 ">
+                <div class="dropdown">
+                    <button class="btn btn-dark text-white dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-expanded="false">
+                        民法典问答
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="../display/question1.html">问答一</a>
+                        <a class="dropdown-item" href="../display/question2.html">问答二</a>
+                        <a class="dropdown-item" href="../display/question3.html">问答三</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item active mr-2">
+                <a class="btn btn-dark text-white" href="../display/laws_all.html">法律全文</a>
+            </li>
+            <li class="nav-item active mr-2">
+                <a class="btn btn-dark text-white" href="../display/lawCase.html">案件实例</a>
+            </li>
+            <li class="nav-item active mr-2">
+                <a class="btn btn-dark text-white" href="/user/question">问答记录</a>
+            </li>
+            <li class="nav-item active mr-2">
+                <a class="btn btn-dark text-white" href="./lawCaseEdit.html">用户管理</a>
+            </li>
+        </ul>
+    </div>
+    <div class="d-flex justify-content-end">
+        <ul id="loginDisplay" class="navbar-nav">
+            <li class="nav-item active border-right border-white">
+                <a class="badge text-white" href="/user/toLogin">登录</a>
+            </li>
+            <li class="nav-item active">
+                <a class="badge  text-white" href="/user/toRegister">注册</a>
+            </li>
+        </ul>
+        &nbsp;&nbsp;
+        <div id="sayHi" class="badge badge-info mr-3"></div>
+
+<div id="quit" class="btn badge badge-dark"></div>
+        &nbsp;&nbsp;<div id="edit" class="btn badge badge-dark"></div>
+    </div>
+</nav>
+<div class="header container" style="margin-top: 20px !important;">
+    <div>
+        <table id="table-question"  class="table-borderless"></table>
+    </div>
+    <div id="toolbar" class="btn-group container mt-3" style="width: 1300px">
+        <button id="btn-refresh" class="btn btn-light border" style="width: 150px">
+            <span class="glyphicon glyphicon-repeat">刷新</span>
+        </button>
+        <button id="btn-select" class="btn btn-light border" style="width: 150px">
+            <span class="glyphicon glyphicon-repeat">查找</span>
+        </button>
+        <button id="btn-add" class="btn btn-light border" style="width: 200px">
+            <span class="glyphicon glyphicon-repeat">新增文章</span>
+        </button>
+        <button id="btn-case" class="btn btn-light border" style="width: 250px">
+            <span class="glyphicon glyphicon-repeat">编辑案件实例</span>
+        </button>
+        <button id="btn-judge" class="btn btn-light border" style="width: 250px">
+            <span class="glyphicon glyphicon-repeat">编辑案件判决</span>
+        </button>
+        <button id="btn-show" class="btn btn-light border" style="width: 250px">
+            <span class="glyphicon glyphicon-repeat">发布/取消发布</span>
+        </button>
+        <button id="btn-delete" class="btn btn-light border" style="width: 250px">
+            <span class="glyphicon glyphicon-repeat">删除文章</span>
+        </button>
+        <input id="input2" type="number" style="width: 200px" class="form-control ml-auto text-center" autocomplete="off" placeholder="显示记录数" value = "">
+        <!--<button id="btn-user" class="btn btn-light border" >
+            <span class="glyphicon glyphicon-repeat">查找</span>
+        </button>-->
+        <input id="input1" type="search" style="width: 500px" class="form-control ml-auto  text-center" autocomplete="off" placeholder="查询案件实例">
+    </div>
+</div>
+<div id="layout">
+    <header>
+        <h3 class="text-center mt-5 mb-3">案件实例</h3>
+    </header>
+    <div id="test-editormd">
+                <textarea id="caseChange" style="display:none;">
+</textarea>
+    </div>
+</div>
+<footer style="height: 20rem;margin-top: 30px!important;" class="mt-2">
+    <div style="background-color: #737373; height: 20rem;">
+        <p class="text-center text-info">
+            友情链接：<br />
+        </p>
+        <hr />
+        <p class="text-center">
+            <a class=" text-white" href="https://www.chinacourt.org/index.shtml" target="_blank">中国人民法院</a>
+        </p>
+        <hr />
+        <p class="text-center text-white">
+            <a class=" text-white" href="https://www.court.gov.cn/" target="_blank">最高人民法院</a>
+        </p>
+        <hr />
+        <p class="text-center text-white">
+            <a class=" text-white" href="https://wenshu.court.gov.cn/" target="_blank">裁判文书网</a>
+        </p>
+        <hr />
+        <div class="m-auto" style="width: 70px; margin: 100px;">
+            <a href="laws.html"><img src="../image/logo_1.png" style="width: 90px;height: 90px;" /></a>
+        </div>
+    </div>
+</footer>
+<!--<script src="../js/jquery.min.js"></script>-->
+<script src="../lib/editormd/editormd.js"></script>
+<script src="../lib/editormd/lib/marked.min.js"></script>
+<script>
+    $(document).ready(function () {
+        //检查session是否含用户名
+        $.ajax({
+            url:"/user/session",
+            method: "POST",
+            dataType: "json",
+            success: function (res) {
+                console.log(res.result);
+                console.log(res.user);
+                if (res.result) {
+                    $("#loginDisplay").html("  ");
+                    $("#sayHi").text("欢迎登陆，"+res.user.userName);
+                    $("#quit").text("返回并退出");
+                    $("#center").text("用户中心");
+                    if (res.user.admin==='管理员'){
+                        $("#edit").text("用户管理");
+                    }
+                } else {
+                    alert('你未登录，请先登录');
+                    window.location.href='/user/toLogin';
+                }
+                if (res.message=='no permission'){
+                    alert(res.message);
+                    window.location.href='/user/index';
+                }
+            },
+            error:function (){
+                alert('你未登录，请先登录');
+                window.location.href='/user/toLogin';
+            }
+        });
+        $("#edit").click(function () {
+            window.location.href="/display/lawCaseEdit.html";
+        });
+        $("#center").click(function () {
+            window.open("/user/question");
+        });
+        //退出按钮
+        $("#quit").click(function () {
+            $.ajax({
+                url:"/user/logout",
+                type: "get",
+                dataType:"json",
+                success:function (){
+                    window.location.href='/user/index';
+                },
+                error:function (){
+                    window.location.href='/user/index';
+                }
+            });
+        });
+        //获取数据函数
+        var dataGet = function () {
+            const num = 999;
+            const keyword = '@全部@';
+            $.ajax({
+                url: '/user/showCase',
+                type: "POST",
+                data:{"num":num,"keyword":keyword},
+                success: function (data) {
+                    if (data.result) {
+                        for (var val in data.cases) {
+                            data.cases[val]["content"] = marked.parse(data.cases[val]["content"]);
+                            data.cases[val]["judgment"] = marked.parse(data.cases[val]["judgment"]);
+                        }
+                        $('#table-question').bootstrapTable('load', data.cases);
+                    } else {
+                    }
+                },error:function(){
+                    alert("错误")
+                }
+            })
+        };
+        var dataChange = function () {
+            var num=document.getElementById("input2").value;
+            var keyword=document.getElementById("input1").value;
+            if (num==''){
+                num=9999;
+            }
+            $.ajax({
+                url: '/user/showCase',
+                type: "POST",
+                async:true,
+                data:{"num":num,"keyword":keyword},
+                success: function (data) {
+                    if (data.result) {
+                        for (var val in data.cases) {
+                            data.cases[val]["content"] = marked.parse(data.cases[val]["content"]);
+                            data.cases[val]["judgment"] = marked.parse(data.cases[val]["judgment"]);
+                        }
+                        $('#table-question').bootstrapTable('load', data.cases);
+                    } else {
+                        alert('查询失败');
+                    }
+                },
+                error:function(){
+                    alert('错误');
+                }
+            })
+        };
+        $('#btn-show').click(function (){
+            var a = document.getElementsByClassName("selected")
+            var id = a.item(0).getElementsByTagName("td").item(1).innerHTML;
+            var isShow = a.item(0).getElementsByTagName("td").item(4).innerHTML;
+            $.ajax({
+                url: '/user/setShow',
+                type: "POST",
+                async:true,
+                data:{"id":id,"isShow":isShow},
+                success: function (data) {
+                    if (data.result) {
+                        alert(data.message);
+                        if(a.item(0).getElementsByTagName("td").item(4).innerHTML==="已发布"){
+                            a.item(0).getElementsByTagName("td").item(4).innerHTML="未发布";
+                        }
+                        else {
+                            a.item(0).getElementsByTagName("td").item(4).innerHTML="已发布";
+                        }
+                    } else {
+                        alert('查询失败');
+                    }
+                },
+                error:function(){
+                    alert('错误');
+                }
+            })
+        })
+        $('#btn-select').click(function () {
+            dataChange();
+        });
+        $('#btn-refresh').click(function () {
+            dataGet();
+        });
+        $('#btn-add').click(function () {
+            $.ajax({
+                url:"/user/addCase",
+                type: "post",
+                dataType:"json",
+                success:function (data){
+                    alert(data.message);
+                    dataGet();
+                },
+                error:function (data){
+                    alert('wrong');
+                }
+            });
+        });
+        $('#btn-delete').click(function () {
+            var a = document.getElementsByClassName("selected")
+            var id = a.item(0).getElementsByTagName("td").item(1).innerHTML;
+            $.ajax({
+                url:"/user/deleteCase",
+                type: "post",
+                dataType:"json",
+                data: {"id": id},
+                success:function (data){
+                    alert(data.message);
+                    dataGet();
+                },
+                error:function (data){
+                    alert('wrong');
+                }
+            });
+        });
+        $('#btn-case').click(function () {
+            var a = document.getElementsByClassName("selected")
+            var id = a.item(0).getElementsByTagName("td").item(1).innerHTML;
+            let content =  $('#caseChange').text();
+            $.ajax({
+                url:"/user/editCase",
+                type: "post",
+                dataType:"json",
+                data: {"id": id,"content":content},
+                success:function (data){
+                    alert(data.message);
+                    content = marked.parse(content);
+                    a.item(0).getElementsByTagName("td").item(2).innerHTML=content;
+                },
+                error:function (data){
+                    alert('wrong');
+                }
+            });
+        });
+        $('#btn-judge').click(function () {
+            var a = document.getElementsByClassName("selected")
+            var id = a.item(0).getElementsByTagName("td").item(1).innerHTML;
+            let judgment =  $('#caseChange').text();
+            $.ajax({
+                url:"/user/editJudgment",
+                type: "post",
+                dataType:"json",
+                data: {"id": id,"judgment":judgment},
+                success:function (data){
+                    alert(data.message);
+                    judgment = marked.parse(judgment);
+                    a.item(0).getElementsByTagName("td").item(3).innerHTML=judgment;
+                },
+                error:function (data){
+                    alert('wrong');
+                }
+            });
+        });
+        $('#table-question').bootstrapTable({
+            /*toolbar: '#toolbar',*/
+            striped: true,
+            clickToSelect: true,
+            singleSelect: true,
+            idField: 'id',
+            height: 600,
+            columns: [
+                {
+                    title: "选择",
+                    checkbox: true
+                }, {
+                    field: "id",
+                    title: "id",
+                    align: "center",
+                    sortable: "true"
+                },{
+                    field: "content",
+                    title: "案件实例",
+                    /*align: "center",*/
+                    sortable: "true"
+                },{
+                    field: "judgment",
+                    title: "判决内容",
+                    /*align: "center",*/
+                    sortable: "true"
+                }, {
+                    field: "isShow",
+                    title: "发布状态",
+                    align: "center",
+                    sortable: "true"
+                }
+            ]
+        });
+        var testEditor;
+
+        $(function() {
+            testEditor = editormd("test-editormd", {
+                width   : "90%",
+                height  : 400,
+                syncScrolling : "single",
+                path    : "../lib/editormd/lib/",
+                saveHTMLToTextarea : true,    // 保存 HTML 到 Textarea
+                emoji: true,
+                tex : true,                   // 开启科学公式TeX语言支持，默认关闭
+                flowChart : true,             // 开启流程图支持，默认关闭
+                sequenceDiagram : true,       // 开启时序/序列图支持，默认关闭,
+                //图片上传
+                imageUpload : true,
+                imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL : "/article/file/upload", //图片上传路径
+                onload : function() {
+                    console.log('onload', this);
+                    dataGet();
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
