@@ -97,6 +97,7 @@
         </nav>
     </div>
 </div>
+<hr style="height: 1px; background-color: #17a2b8"/>
 <div class="header container mb-3" style="margin-top: 20px !important;">
     <header>
         <h3 class="text-center mt-3 mb-3" id="commentBar">留言板</h3>
@@ -216,7 +217,7 @@
                     htmladd += '<div class="card">';
                     htmladd += '<div class="card-body  overflow-auto" style="height: 385px;">';
                     htmladd += data.cases[val]["content"];
-                    htmladd += '<button id="' + btnMap + '" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#' + judgmentMap + '">查看判决</button>';
+                    htmladd += '<button id="' + btnMap + '" class="btn btn-primary mt-2" type="button" data-toggle="collapse" data-target="#' + judgmentMap + '">查看</button>';
                     htmladd += '</div>';
                     htmladd += '</div>';
                     htmladd += '</div>';
@@ -317,7 +318,7 @@
                 success: function (data) {
                     if (data.result) {
                         alert(data.message);
-                        document.getElementById("contentU").value = "";
+                        dataGet();
                         //window.location.href='/comment/tolawCase'
                         //	$('#table-question').bootstrapTable('load', data.rows);
                     } else {
@@ -335,7 +336,7 @@
     }
     $('#btn-refresh').click(function () {
         var a = document.getElementsByClassName("selected")
-        var id = a.item(0).getElementsByTagName("td").item(1).innerHTML;
+        var id =a.item(0).children[1].innerHTML;
 
         $.ajax({
             url: '/comment/del',
