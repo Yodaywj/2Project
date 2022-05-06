@@ -68,7 +68,7 @@ public class UserController {
         } else {
             if (user.getAdmin().equals("管理员")){
                 out.println("<script>");
-                out.println("alert('该账号为管理员账号');");
+                out.println("alert('无此用户');");
                 out.println("window.location.href='/user/toLogin'");
                 out.println("</script>");
             }
@@ -113,7 +113,7 @@ public class UserController {
             } else {
                 out.println("<script>");
                 out.println("alert('密码错误');");
-                out.println("window.location.href='/user/toLogin'");
+                out.println("window.location.href='/user/Admin'");
                 out.println("</script>");
             }
         }
