@@ -79,6 +79,23 @@
         <input id="inputPage" type="number" value="" class="form-control" autocomplete="off"
                min="1" maxlength="3" style="height: 48px;width: 100px;">
     </div>
+    <div class="row mt-1">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link btn text-primary rounded-left" id="previousPage" aria-label="Previous" style="border-radius:0%;!important;">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item disabled" ><a id="currentPage" class="page-link text-dark" href="#">1</a></li>
+                <li class="page-item">
+                    <a class="page-link btn text-primary rounded-right" aria-label="Next" id="nextPage" style="border-radius:0%;!important;">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
 <div class="header container mb-3" style="margin-top: 20px !important;">
     <header>
@@ -121,11 +138,27 @@
     let contentRender = [];
     let judgmentRender = []
     let groupIndex = 0;
-    let maxPage;
+    let maxPage=0;
     let currentPage = 1;
     let cases;
     let divNum = 4;
     let inputPage=1;
+    $("#nextPage").click(()=>{
+        if (maxPage>=currentPage+1){
+            currentPage+=1;
+            groupIndex=currentPage-1;
+            renderArea = 'cases1';
+            pageRender();
+        }
+    })
+    $("#previousPage").click(()=>{
+        if (1<=currentPage-1){
+            currentPage-=1;
+            groupIndex=currentPage-1;
+            renderArea = 'cases1';
+            pageRender();
+        }
+    })
     $("#pageChange").click(()=>{
         inputPage = Math.ceil(document.getElementById("inputPage").value);
         if (inputPage>maxPage||inputPage<1){
@@ -229,6 +262,7 @@
         }
         $("#cases1").html(cases1);
         $("#cases2").html(cases2);
+        document.getElementById("currentPage").textContent="第"+currentPage+"页";
         window.location.hash="#commentBar"
         window.location.hash="#c"+cases[divNum*groupIndex]["id"];
     }
