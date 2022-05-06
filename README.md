@@ -5,7 +5,7 @@
 
 
 
-##### 项目基于ssm以及mybatis框架，数据库采用mysql，前端是bootstrap+jquery基于ssm以及mybatis框架，数据库采用mysql，前端是bootstrap+jquery
+##### 项目基于ssm以及mybatis框架，数据库采用mysql，后端基于ssm以及mybatis框架，数据库采用mysql，前端采用bootstrap+jquery架构
 
 
 
