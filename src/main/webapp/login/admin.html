@@ -54,4 +54,12 @@ transform:translate(-50%,-50%); /*CSS3的样式，:translate(-50%,-50%)相对于
   </div>
 </div>
 </body>
+<script>
+  window.addEventListener("keyup",(event)=>{
+    console.log(event.code);
+    if (event.key==="Enter"){
+      document.getElementById("signIn").click();
+    }
+  });
+</script>
 </html>
