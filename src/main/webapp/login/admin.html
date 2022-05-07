@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%">
 <head>
   <meta charset="UTF-8">
   <title>登录</title>
@@ -7,11 +7,15 @@
   <script src="../js/juqery.js"></script>
   <script src="../js/input.js"></script>
 </head>
-<body class="pt-5">
+<body class="" style="height: 100%">
 <!-- 导航栏 -->
 
 
-<div class="container align-self-auto py-5 border border-primary" style="background-color: rgba(248,248,255,2);border-radius: 1em;">
+<div class="container align-self-auto py-5 border border-primary" style="background-color: rgba(248,248,255,2);border-radius: 1em;
+position: absolute; /*在子元素中使用绝对定位*/
+top:50%; /*距离相对于父元素的50%的高*/
+left:50%;
+transform:translate(-50%,-50%); /*CSS3的样式，:translate(-50%,-50%)相对于自己距离x轴和y轴的-50%*/">
   <div class="top-nav text-center py-1">管理员登录</div>
   <div class="mid-body mx-auto w-25">
     <form class="list-group" onsubmit="return func1()" action="/user/admin" method="post">
