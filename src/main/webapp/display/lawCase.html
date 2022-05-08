@@ -345,6 +345,9 @@
         if (num == '') {
             num = 0;
         }
+        if (commentId == '') {
+            commentId = -1;
+        }
         $.ajax({
             url: '/comment/listComment',
             type: "POST",
