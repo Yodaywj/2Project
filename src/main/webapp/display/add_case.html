@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8">
-    0
+
     <title>文章编辑</title>
     <link rel="stylesheet" href="../vendor/bootstrap-4.5.0-dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="../vendor/bootstrap-4.5.0-dist/css/bootstrap-table.min.css"/>
@@ -137,7 +137,7 @@
                     $("#sayHi").text("欢迎登陆，"+res.user.userName);
                     $("#quit").text("返回并退出");
                     $("#center").text("用户中心");
-                    if (res.user.admin==='管理员'){
+                    if (res.user.admin==='管理员'||res.user.admin==='root'){
                         $("#edit").text("用户管理");
                     }
                 } else {

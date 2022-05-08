@@ -129,7 +129,7 @@
         <input id="casesNum" type="number" value="" class="form-control disabled" autocomplete="off" placeholder="输入文章ID"
                style="width: 130px; border-bottom-left-radius: 0px;border-top-left-radius: 0px;" min="1" max="1">
         <button id="toSingleCase" class="btn btn-primary mb-5">文章跳转</button>
-        <button id="defaultCase" class="btn btn-primary mb-5">默认(文章id:0)</button>
+        <button id="defaultCase" class="btn btn-primary mb-5 border-left">默认(文章id:0)</button>
     </div>
 </div>
 <link rel="stylesheet" href="../lib/editormd/css/editormd.css"/>
@@ -157,6 +157,10 @@
     let caseTime = [];
     let timeMap = new Map();
     let ccMap = new Map();
+    $("#defaultCase").click(()=>{
+      document.getElementById("casesNum").value = 0;
+      comment();
+    })
     $("#nextPage").click(()=>{
         if (maxPage>=currentPage+1){
             currentPage+=1;
@@ -267,20 +271,25 @@
     }
     const singleCaseRender = (commentId)=>{
         commentId = String(commentId);
-        if (typeof ccMap.get("c"+commentId)==='undefined'&&commentId!==0){
+        if (typeof ccMap.get("c"+commentId)==='undefined'&&commentId!=="0"){
             alert("ID错误")
         }else{
-            let cases1="";
-            let cases2="";
-            let a= "c"+commentId;
-            cases1+=ccMap.get("c"+commentId);
-            cases1+=ccMap.get("j"+commentId);
-            $("#cases1").html(cases1);
-            $("#cases2").html(cases2);
-            currentPage=0;
-            document.getElementById("currentPage").textContent="文章"+commentId;
-            window.location.hash="#commentBar"
-            window.location.hash="#";
+            if (commentId==="0"){
+                window.location.hash="#commentBar"
+                window.location.hash="#";
+            }else{
+                let cases1="";
+                let cases2="";
+                let a= "c"+commentId;
+                cases1+=ccMap.get("c"+commentId);
+                cases1+=ccMap.get("j"+commentId);
+                $("#cases1").html(cases1);
+                $("#cases2").html(cases2);
+                currentPage=0;
+                document.getElementById("currentPage").textContent="文章"+commentId;
+                window.location.hash="#commentBar"
+                window.location.hash="#";
+            }
         }
     }
     $("#toSingleCase").click(()=>{
@@ -366,7 +375,7 @@
         correct = marked.parse(correct);
         if (correct.match(/^[ ]*$/)) {
             alert('不能为空');
-        } else if (commentId<0||commentId!==Math.ceil(commentId)||typeof ccMap.get("c"+commentId)==='undefined'){
+        } else if (commentId<0||commentId!==Math.ceil(commentId)||(typeof ccMap.get("c"+commentId)==='undefined')&&commentId!==0){
             alert("ID错误")
         } else {
             $.ajax({

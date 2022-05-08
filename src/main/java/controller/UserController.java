@@ -67,7 +67,7 @@ public class UserController {
             out.println("window.location.href='/user/toLogin'");
             out.println("</script>");
         } else {
-            if (user.getAdmin().equals("管理员")){
+            if (!user.getAdmin().equals("普通用户")){
                 out.println("<script>");
                 out.println("alert('无此用户');");
                 out.println("window.location.href='/user/toLogin'");
@@ -99,7 +99,7 @@ public class UserController {
             out.println("alert('无此用户');");
             out.println("window.location.href='/user/Admin'");
             out.println("</script>");
-        } else if (!user.getAdmin().equals("管理员")){
+        } else if (!user.getAdmin().equals("管理员")&&!user.getAdmin().equals("root")){
             out.println("<script>");
             out.println("alert('该账户非管理员');");
             out.println("window.location.href='/user/Admin'");
@@ -225,9 +225,9 @@ public class UserController {
     @ResponseBody
     public ResultEntity mute(int id,String state,String admin,HttpServletRequest request) {
         Tb_User user = (Tb_User) request.getSession().getAttribute("user");
-        if (admin.equals("管理员")&&!Objects.equals(user.getAdmin(), "root")) {
+        if ((admin.equals("管理员")&&!Objects.equals(user.getAdmin(), "root"))||admin.equals("root")) {
             return ResultEntity.failure("权限不足，操作失败");
-        } else {
+        } else{
             userMapper.mute(id,state);
             return ResultEntity.success("操作成功");
         }
