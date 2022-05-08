@@ -129,6 +129,7 @@
         <input id="casesNum" type="number" value="" class="form-control disabled" autocomplete="off" placeholder="输入文章ID"
                style="width: 130px; border-bottom-left-radius: 0px;border-top-left-radius: 0px;" min="1" max="1">
         <button id="toSingleCase" class="btn btn-primary mb-5">文章跳转</button>
+        <button id="defaultCase" class="btn btn-primary mb-5">默认(文章id:0)</button>
     </div>
 </div>
 <link rel="stylesheet" href="../lib/editormd/css/editormd.css"/>
@@ -266,7 +267,7 @@
     }
     const singleCaseRender = (commentId)=>{
         commentId = String(commentId);
-        if (typeof ccMap.get("c"+commentId)==='undefined'){
+        if (typeof ccMap.get("c"+commentId)==='undefined'&&commentId!==0){
             alert("ID错误")
         }else{
             let cases1="";
@@ -284,7 +285,7 @@
     }
     $("#toSingleCase").click(()=>{
         const id = parseFloat(document.getElementById("casesNum").value);
-        if (id<1||id!==Math.ceil(id)){
+        if (id<0||id!==Math.ceil(id)){
             alert("ID格式错误")
         }else {
             singleCaseRender(id);
@@ -365,7 +366,7 @@
         correct = marked.parse(correct);
         if (correct.match(/^[ ]*$/)) {
             alert('不能为空');
-        } else if (commentId<1||commentId!==Math.ceil(commentId)||typeof ccMap.get("c"+commentId)==='undefined'){
+        } else if (commentId<0||commentId!==Math.ceil(commentId)||typeof ccMap.get("c"+commentId)==='undefined'){
             alert("ID错误")
         } else {
             $.ajax({
