@@ -135,6 +135,10 @@
 <script src="../lib/editormd/editormd.js"></script>
 <script src="../lib/editormd/lib/marked.min.js"></script>
 <script>
+    let commentLink = (id)=>{
+        window.location.href = "#toSingleCase";
+        document.getElementById("casesNum").value = id;
+    }
     const displayMap = new Map();
     let change = true;
     let renderArea = 'cases1';
@@ -151,11 +155,7 @@
     let inputPage=1;
     let caseTime = [];
     let timeMap = new Map();
-    document.getElementById("casesNum").addEventListener("keyup",()=>{
-        if (parseInt(document.getElementById("casesNum").value)>casesNum){
-            document.getElementById("casesNum").value = casesNum;
-            }
-    });
+    let ccMap = new Map();
     $("#nextPage").click(()=>{
         if (maxPage>=currentPage+1){
             currentPage+=1;
@@ -234,7 +234,7 @@
                     htmladd += data.cases[val]["content"];
                     htmladd += '<span class="mt-3" style="display: block">'+caseTime[casesNum]+'</span>'
                     htmladd += '<button id="' + btnMap + '" class="btn btn-primary mt-2" type="button" data-toggle="collapse" data-target="#' + judgmentMap + '">查看</button>';
-                    htmladd += '<span class="mb-3 float-right badge badge-secondary bg-secondary mt-2" style="display: block;width: 50px;">'+(casesNum+1)+'</span>'
+                    htmladd += '<button class="border-0 mb-3 float-right badge badge-secondary bg-secondary mt-2"><span  onclick="commentLink('+data.cases[val]["id"]+')" style="display: block;width: 50px;">'+data.cases[val]["id"]+'</span></button>'
                     htmladd += '</div>';
                     htmladd += '</div>';
                     htmladd += '</div>';
@@ -249,6 +249,8 @@
                     htmlrender += '</div>';
                     contentRender[casesNum] = htmladd;
                     judgmentRender[casesNum] = htmlrender;
+                    ccMap.set(caseMap,htmladd);
+                    ccMap.set(judgmentMap,htmlrender);
                     casesNum += 1;
                 }
                 maxPage = Math.ceil(casesNum/divNum);
@@ -263,18 +265,24 @@
         })
     }
     const singleCaseRender = (commentId)=>{
-        let cases1="";
-        let cases2="";
-        cases1+=contentRender[commentId-1];
-        cases1+=judgmentRender[commentId-1];
-        $("#cases1").html(cases1);
-        $("#cases2").html(cases2);
-        currentPage=0;
-        document.getElementById("currentPage").textContent="文章"+commentId;
+        commentId = String(commentId);
+        if (typeof ccMap.get("c"+commentId)==='undefined'){
+            alert("ID错误")
+        }else{
+            let cases1="";
+            let cases2="";
+            let a= "c"+commentId;
+            cases1+=ccMap.get("c"+commentId);
+            cases1+=ccMap.get("j"+commentId);
+            $("#cases1").html(cases1);
+            $("#cases2").html(cases2);
+            currentPage=0;
+            document.getElementById("currentPage").textContent="文章"+commentId;
+        }
     }
     $("#toSingleCase").click(()=>{
         const id = parseFloat(document.getElementById("casesNum").value);
-        if (id<1||id>casesNum||id!==Math.ceil(id)){
+        if (id<1||id!==Math.ceil(id)){
             alert("ID格式错误")
         }else {
             singleCaseRender(id);
@@ -312,7 +320,7 @@
             success: function (data) {
                 for (let val in data.rows){
                     let CID=data.rows[val]["commentId"];
-                    data.rows[val]["commentId"] = "<a href='#' onclick='singleCaseRender("+CID+")'>"+CID+"</a>"
+                    data.rows[val]["commentId"] = `<a href='#' onclick='singleCaseRender(${CID})'>${CID}</a>`
                 }
                 $('#table-question').bootstrapTable('load', data.rows);
             }
@@ -333,7 +341,7 @@
                 if (data.result) {
                     for (let val in data.rows){
                         let CID=data.rows[val]["commentId"];
-                        data.rows[val]["commentId"] = "<a href='#' onclick='singleCaseRender("+CID+")'>"+CID+"</a>"
+                        data.rows[val]["commentId"] = `<a href='#' onclick='singleCaseRender(${CID})'>${CID}</a>`
                     }
                     $('#table-question').bootstrapTable('load', data.rows);
                 } else {
@@ -357,8 +365,8 @@
         correct = marked.parse(correct);
         if (correct.match(/^[ ]*$/)) {
             alert('不能为空');
-        } else if (commentId<1||commentId>casesNum||commentId!==Math.ceil(commentId)){
-            alert("ID格式错误")
+        } else if (commentId<1||commentId!==Math.ceil(commentId)||typeof ccMap.get("c"+commentId)==='undefined'){
+            alert("ID错误")
         } else {
             $.ajax({
                 url: '/comment/add',
