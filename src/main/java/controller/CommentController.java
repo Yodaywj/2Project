@@ -69,7 +69,7 @@ public class CommentController {
         String time = request.getParameter("time");
         Tb_User u = (Tb_User) request.getSession().getAttribute("user");
         ResultEntity resultEntity = new ResultEntity();
-        if (id.equals(u.getUserName())||u.getAdmin().equals("管理员")) {
+        if (id.equals(u.getUserName())||u.getAdmin().equals("root")) {
             commentService.del(id,time);
             resultEntity.setResult(true);
             return resultEntity;

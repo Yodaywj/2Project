@@ -18,10 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 @Controller
 @RequestMapping("/user")
@@ -214,9 +211,10 @@ public class UserController {
 
     @RequestMapping("/delete")
     @ResponseBody
-    public ResultEntity delete(int id,String admin) {
-        if (admin.equals("管理员")) {
-            return ResultEntity.failure("无法删除");
+    public ResultEntity delete(int id,String admin,HttpServletRequest request) {
+        Tb_User user = (Tb_User) request.getSession().getAttribute("user");
+        if (!Objects.equals(user.getAdmin(), "root")) {
+            return ResultEntity.failure("非root用户，删除失败");
         } else {
             userMapper.delete(id);
             return ResultEntity.success("删除成功");
@@ -225,9 +223,10 @@ public class UserController {
 
     @RequestMapping("/mute")
     @ResponseBody
-    public ResultEntity mute(int id,String state,String admin) {
-        if (admin.equals("管理员")) {
-            return ResultEntity.failure("操作失败");
+    public ResultEntity mute(int id,String state,String admin,HttpServletRequest request) {
+        Tb_User user = (Tb_User) request.getSession().getAttribute("user");
+        if (admin.equals("管理员")&&!Objects.equals(user.getAdmin(), "root")) {
+            return ResultEntity.failure("权限不足，操作失败");
         } else {
             userMapper.mute(id,state);
             return ResultEntity.success("操作成功");
