@@ -16,7 +16,7 @@ public interface CommentService {
 
     Tb_Comment listid(int id);
 
-    void del(int id);
+    void del(String userName,String time);
 
     List<Tb_Case> showNewCases();
 }

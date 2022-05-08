@@ -14,7 +14,7 @@ public interface CommentMapper {
 
     Tb_Comment selid(int id);
 
-    void del(int id);
+    void del(@Param("userName")String userName, @Param("time")String time);
 
     List<Tb_Case> showNewCases();
 }

@@ -4,6 +4,7 @@ import domain.ResultEntity;
 import domain.Tb_Case;
 import domain.Tb_Comment;
 import domain.Tb_User;
+import mapper.CommentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,12 +65,12 @@ public class CommentController {
     public ResultEntity del(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf-8;");
-        int id = Integer.parseInt(request.getParameter("id"));
+        String id = request.getParameter("id");
+        String time = request.getParameter("time");
         Tb_User u = (Tb_User) request.getSession().getAttribute("user");
-        Tb_Comment questions = commentService.listid(id);
         ResultEntity resultEntity = new ResultEntity();
-        if (questions.getUserName().equals(u.getUserName())||u.getAdmin().equals("管理员")) {
-            commentService.del(id);
+        if (id.equals(u.getUserName())||u.getAdmin().equals("管理员")) {
+            commentService.del(id,time);
             resultEntity.setResult(true);
             return resultEntity;
         } else {
@@ -84,6 +85,7 @@ public class CommentController {
             response.setCharacterEncoding("utf-8");
             response.setContentType("text/html;charset=utf-8;");
             String correct = request.getParameter("correct");
+            int commentId = Integer.parseInt(request.getParameter("commentId"));
             Tb_Comment t = new Tb_Comment();
             Tb_User u = (Tb_User) request.getSession().getAttribute("user");
             if (u == null) throw new Exception("");
@@ -92,6 +94,7 @@ public class CommentController {
             } else {
                 t.setUserName(u.getUserName());
                 t.setcorrect(correct);
+                t.setCommentId(commentId);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 java.util.Date date = new java.util.Date();
                 String str = sdf.format(date);

@@ -14,7 +14,7 @@ public interface UserMapper {
     void delete(@Param("id") int id);
     void mute(@Param("id") int id,@Param("state") String state);
 
-    void addCase();
+    void addCase(@Param("time") String time);
 
     void editCase(@Param("id") int id, @Param("content") String content);
 

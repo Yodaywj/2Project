@@ -37,8 +37,8 @@
             WHERE id=#{id};
     </update>
     <insert id="addCase" parameterType="domain.Tb_Case">
-        insert into tb_case(content,judgment)
-        values ('未编辑','未编辑')
+        insert into tb_case(content,judgment,time)
+        values ('未编辑','未编辑',#{time})
     </insert>
     <update id="editCase" parameterType="domain.Tb_Case">
         update tb_case set content = #{content} WHERE id=#{id};

@@ -6,6 +6,16 @@ public class Tb_Comment {
     public String correct;
     public String userName;
 
+    public int getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(int commentId) {
+        this.commentId = commentId;
+    }
+
+    public int commentId;
+
     public String gettime() {
         return time;
     }

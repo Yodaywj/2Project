@@ -124,7 +124,12 @@
                 <textarea id="caseChange" style="display:none;">
 </textarea>
     </div>
-    <button class="btn btn-primary mb-5" onclick="comment()" style="margin-left: 200px;">提交</button>
+    <div class="btn-group">
+        <button class="btn btn-primary mb-5" onclick="comment()" style="margin-left: 200px;">提交</button>
+        <input id="casesNum" type="number" value="" class="form-control disabled" autocomplete="off" placeholder="输入文章ID"
+               style="width: 130px; border-bottom-left-radius: 0px;border-top-left-radius: 0px;" min="1" max="1">
+        <button id="toSingleCase" class="btn btn-primary mb-5">文章跳转</button>
+    </div>
 </div>
 <link rel="stylesheet" href="../lib/editormd/css/editormd.css"/>
 <script src="../lib/editormd/editormd.js"></script>
@@ -144,6 +149,13 @@
     let cases;
     let divNum = 4;
     let inputPage=1;
+    let caseTime = [];
+    let timeMap = new Map();
+    document.getElementById("casesNum").addEventListener("keyup",()=>{
+        if (parseInt(document.getElementById("casesNum").value)>casesNum){
+            document.getElementById("casesNum").value = casesNum;
+            }
+    });
     $("#nextPage").click(()=>{
         if (maxPage>=currentPage+1){
             currentPage+=1;
@@ -205,19 +217,24 @@
                 for (let val in data.cases) {
                     data.cases[val]["content"] = marked.parse(data.cases[val]["content"]);
                     data.cases[val]["judgment"] = marked.parse(data.cases[val]["judgment"]);
+                    data.cases[val]["time"] = marked.parse('###### '+data.cases[val]["time"]);
+                    caseTime[casesNum] = data.cases[val]["time"]
                     content[casesNum] = data.cases[val]["content"];
                     judgment[casesNum] = data.cases[val]["judgment"]
                     caseMap = 'c' + data.cases[val]["id"];
                     judgmentMap = 'j' + data.cases[val]["id"];
                     btnMap = 'b' + data.cases[val]["id"];
                     displayMap.set(btnMap, judgmentMap);
+                    timeMap.set(caseTime[casesNum],content[casesNum]);
                     let htmladd = '';
                     let htmlrender = '';
                     htmladd += '<div class="row-sm-6 my-4 mx-2" id="' + caseMap + '">';
                     htmladd += '<div class="card">';
                     htmladd += '<div class="card-body  overflow-auto" style="height: 385px;">';
                     htmladd += data.cases[val]["content"];
+                    htmladd += '<span class="mt-3" style="display: block">'+caseTime[casesNum]+'</span>'
                     htmladd += '<button id="' + btnMap + '" class="btn btn-primary mt-2" type="button" data-toggle="collapse" data-target="#' + judgmentMap + '">查看</button>';
+                    htmladd += '<span class="mb-3 float-right badge badge-secondary bg-secondary mt-2" style="display: block;width: 50px;">'+(casesNum+1)+'</span>'
                     htmladd += '</div>';
                     htmladd += '</div>';
                     htmladd += '</div>';
@@ -238,12 +255,33 @@
                 pageRender();
                 document.getElementById("inputPage").setAttribute("placeholder","共"+maxPage+"页");
                 document.getElementById("inputPage").setAttribute("max",maxPage);
+                document.getElementById("casesNum").setAttribute("max",casesNum);
             },
             error: function () {
                 alert("wrong");
             }
         })
     }
+    const singleCaseRender = (commentId)=>{
+        let cases1="";
+        let cases2="";
+        cases1+=contentRender[commentId-1];
+        cases1+=judgmentRender[commentId-1];
+        $("#cases1").html(cases1);
+        $("#cases2").html(cases2);
+        currentPage=0;
+        document.getElementById("currentPage").textContent="文章"+commentId;
+    }
+    $("#toSingleCase").click(()=>{
+        const id = parseFloat(document.getElementById("casesNum").value);
+        if (id<1||id>casesNum||id!==Math.ceil(id)){
+            alert("ID格式错误")
+        }else {
+            singleCaseRender(id);
+            window.location.hash="#commentBar"
+            window.location.hash="#";
+        }
+    });
     const pageRender = ()=>{
         let cases1="";
         let cases2="";
@@ -272,6 +310,10 @@
             url: '/comment/list',
             type: "POST",
             success: function (data) {
+                for (let val in data.rows){
+                    let CID=data.rows[val]["commentId"];
+                    data.rows[val]["commentId"] = "<a href='#' onclick='singleCaseRender("+CID+")'>"+CID+"</a>"
+                }
                 $('#table-question').bootstrapTable('load', data.rows);
             }
         })
@@ -289,6 +331,10 @@
             data: {"num": num, "user": user},
             success: function (data) {
                 if (data.result) {
+                    for (let val in data.rows){
+                        let CID=data.rows[val]["commentId"];
+                        data.rows[val]["commentId"] = "<a href='#' onclick='singleCaseRender("+CID+")'>"+CID+"</a>"
+                    }
                     $('#table-question').bootstrapTable('load', data.rows);
                 } else {
                     alert('查询失败');
@@ -307,14 +353,17 @@
     })
     const comment = function () {
         var correct = document.getElementById("caseChange").value;
+        const commentId = parseFloat(document.getElementById("casesNum").value);
         correct = marked.parse(correct);
         if (correct.match(/^[ ]*$/)) {
             alert('不能为空');
+        } else if (commentId<1||commentId>casesNum||commentId!==Math.ceil(commentId)){
+            alert("ID格式错误")
         } else {
             $.ajax({
                 url: '/comment/add',
                 type: "POST",
-                data: {"correct": correct},
+                data: {"correct": correct,"commentId": commentId},
                 success: function (data) {
                     if (data.result) {
                         alert(data.message);
@@ -336,12 +385,13 @@
     }
     $('#btn-refresh').click(function () {
         var a = document.getElementsByClassName("selected")
-        var id =a.item(0).children[1].innerHTML;
-
+        var id =a.item(0).children[2].innerHTML;
+        let time = a.item(0).children[4].innerHTML;
+        console.log(time,id)
         $.ajax({
             url: '/comment/del',
             type: "POST",
-            data: {"id": id},
+            data: {"id": id,"time":time},
             success: function (data) {
                 if (data.result) {
                     alert('删除成功');
@@ -413,7 +463,6 @@
         $('#table-question').bootstrapTable({
             toolbar: '#toolbar',
             striped: true,
-            clickToSelect: true,
             singleSelect: true,
             idField: 'id',
             height: 500,
@@ -422,15 +471,14 @@
                     title: "选择",
                     checkbox: true
                 }, {
-                    field: "id",
-                    title: "No.",
+                    field: "commentId",
+                    title: "文章ID",
                     align: "center",
                     sortable: "true"
                 }, {
                     field: "userName",
                     title: "用户名",
                     align: "center",
-                    sortable: "true"
                 }, {
                     field: "correct",
                     title: "内容",

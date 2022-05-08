@@ -17,7 +17,11 @@ import javax.xml.registry.infomodel.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 @Controller
 @RequestMapping("/user")
@@ -233,7 +237,9 @@ public class UserController {
     @RequestMapping("/addCase")
     @ResponseBody
     public ResultEntity addCase() {
-       userMapper.addCase();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String time = format.format(new Date());
+       userMapper.addCase(time);
        return ResultEntity.success("新增案例成功");
     }
 

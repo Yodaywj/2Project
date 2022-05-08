@@ -279,7 +279,7 @@
                 type: "POST",
                 data:{"id":id,"power":power},
                 success: function (data) {
-                    alert(data.message)
+                    alert(data.message);
                     a.item(0).children[5].innerHTML=power;
                 },error:function(){
                     alert("错误");

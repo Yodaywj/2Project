@@ -36,8 +36,8 @@ public class CommentserviceImpl implements CommentService {
   }
 
   @Override
-  public void del(int id) {
-    commentMapper.del(id);
+  public void del(String userName,String time) {
+    commentMapper.del(userName,time);
   }
 
     @Override

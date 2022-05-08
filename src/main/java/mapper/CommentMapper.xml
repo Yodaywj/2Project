@@ -15,13 +15,13 @@
         select * from tb_comment1 where id=#{id};
     </select>
     <select id="showNewCases" resultType="domain.Tb_Case">
-        select * from  tb_case where isShow='已发布' order by power desc,id;
+        select * from  tb_case where isShow='已发布' order by power desc,time desc;
     </select>
 
     <insert id="save" parameterType="domain.Tb_Comment">
-        insert into tb_comment1(correct,userName,time) values (#{correct},#{userName},#{time})
+        insert into tb_comment1(correct,userName,time,commentId) values (#{correct},#{userName},#{time},#{commentId})
     </insert>
     <delete id="del" parameterType="domain.Tb_Comment">
-        delete from tb_comment1 where id=#{id};
+        delete from tb_comment1 where userName=#{userName} and time=#{time} ;
     </delete>
 </mapper>
