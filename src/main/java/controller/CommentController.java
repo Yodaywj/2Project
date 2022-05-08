@@ -34,7 +34,8 @@ public class CommentController {
         try {
             int num = 50;
             String user = "";
-            List<Tb_Comment> questions = commentService.listAll(num, user);
+            int commentId = -1;
+            List<Tb_Comment> questions = commentService.listAll(num, user ,commentId);
             ResultEntity resultEntity = new ResultEntity();
             resultEntity.setResult(true);
             resultEntity.setOther("rows", questions);
@@ -45,12 +46,12 @@ public class CommentController {
     }
     @RequestMapping("/listComment")
     @ResponseBody
-    public ResultEntity listComment(int num,String user) {
+    public ResultEntity listComment(int num,String user,int commentId) {
         try {
             if (num==0){
                 num=99;
             }
-            List<Tb_Comment> questions = commentService.listAll(num,user);
+            List<Tb_Comment> questions = commentService.listAll(num,user,commentId);
             ResultEntity resultEntity = new ResultEntity();
             resultEntity.setResult(true);
             resultEntity.setOther("rows", questions);

@@ -117,6 +117,8 @@
                style="width: 200px">
         <input id="input1" type="search" class="form-control ml-auto" autocomplete="off" placeholder="查找对应用户"
                style="width: 200px">
+        <input id="inputCID" type="search" class="form-control ml-auto" autocomplete="off" placeholder="查找文章ID"
+               style="width: 200px">
     </div>
 </div>
 <div id="layout">
@@ -129,7 +131,7 @@
         <input id="casesNum" type="number" value="" class="form-control disabled" autocomplete="off" placeholder="输入文章ID"
                style="width: 130px; border-bottom-left-radius: 0px;border-top-left-radius: 0px;" min="1" max="1">
         <button id="toSingleCase" class="btn btn-primary mb-5">文章跳转</button>
-        <button id="defaultCase" class="btn btn-primary mb-5 border-left">默认(文章id:0)</button>
+        <button id="defaultCase" class="btn btn-primary mb-5 border-left">默认提交(文章id:0)</button>
     </div>
 </div>
 <link rel="stylesheet" href="../lib/editormd/css/editormd.css"/>
@@ -339,6 +341,7 @@
     var dataChange = function () {
         var num = document.getElementById("input2").value;
         var user = document.getElementById("input1").value;
+        var commentId = document.getElementById("inputCID").value;
         if (num == '') {
             num = 0;
         }
@@ -346,7 +349,7 @@
             url: '/comment/listComment',
             type: "POST",
             async: true,
-            data: {"num": num, "user": user},
+            data: {"num": num, "user": user,"commentId": commentId},
             success: function (data) {
                 if (data.result) {
                     for (let val in data.rows){
@@ -368,6 +371,9 @@
     });
     $('#refresh').click(function () {
         dataGet();
+        document.getElementById("input2").value=""
+        document.getElementById("input1").value=""
+        document.getElementById("inputCID").value=""
     })
     const comment = function () {
         var correct = document.getElementById("caseChange").value;

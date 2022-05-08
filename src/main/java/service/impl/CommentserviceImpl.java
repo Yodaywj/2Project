@@ -21,8 +21,8 @@ public class CommentserviceImpl implements CommentService {
 
 
     @Override
-    public List<Tb_Comment> listAll(int num,String user) {
-        return commentMapper.Findall(num,user);
+    public List<Tb_Comment> listAll(int num,String user,int commentId) {
+        return commentMapper.Findall(num,user,commentId);
     }
 
   @Override

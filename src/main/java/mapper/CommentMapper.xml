@@ -5,9 +5,12 @@
 <mapper namespace="mapper.CommentMapper">
 
     <select id="Findall" resultType="domain.Tb_Comment">
-        select * from tb_comment1
+        select * from tb_comment1 where 1=1
         <if test="user != ''">
-            where userName = #{user}
+            and userName = #{user}
+        </if>
+        <if test="commentId != -1">
+           and commentId = #{commentId}
         </if>
         order by time desc limit 0,#{num};
     </select>

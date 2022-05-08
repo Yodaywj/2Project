@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface CommentService {
 
-    List<Tb_Comment> listAll(int num,String user);
+    List<Tb_Comment> listAll(int num,String user,int commentId);
 
     void save(Tb_Comment t);
 

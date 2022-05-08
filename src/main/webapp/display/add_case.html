@@ -255,6 +255,9 @@
         });
         $('#btn-refresh').click(function () {
             dataGet();
+            document.getElementById("input2").value=""
+            document.getElementById("input1").value=""
+            document.getElementById("input3").value=""
         });
         $('#btn-add').click(function () {
             $.ajax({

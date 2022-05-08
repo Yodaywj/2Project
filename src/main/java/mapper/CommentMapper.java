@@ -10,7 +10,7 @@ import java.util.List;
 public interface CommentMapper {
     void save (Tb_Comment t);
 
-    List<Tb_Comment> Findall(@Param("num") int num,@Param("user") String user);
+    List<Tb_Comment> Findall(@Param("num") int num,@Param("user") String user,@Param("commentId")int commentId);
 
     Tb_Comment selid(int id);
 
