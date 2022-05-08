@@ -278,6 +278,8 @@
             $("#cases2").html(cases2);
             currentPage=0;
             document.getElementById("currentPage").textContent="文章"+commentId;
+            window.location.hash="#commentBar"
+            window.location.hash="#";
         }
     }
     $("#toSingleCase").click(()=>{
@@ -286,8 +288,6 @@
             alert("ID格式错误")
         }else {
             singleCaseRender(id);
-            window.location.hash="#commentBar"
-            window.location.hash="#";
         }
     });
     const pageRender = ()=>{
