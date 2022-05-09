@@ -17,4 +17,6 @@ public interface CommentMapper {
     void del(@Param("userName")String userName, @Param("time")String time);
 
     List<Tb_Case> showNewCases();
+
+    void close(@Param("closeState")String closeState);
 }

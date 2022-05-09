@@ -23,6 +23,9 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private CommentMapper commentMapper;
+
     @RequestMapping("/tolawCase")
     public String tolawCase() {
         return "display/lawCase";
@@ -116,6 +119,14 @@ public class CommentController {
         ResultEntity result = new ResultEntity();
         result.setResult(true);
         result.setOther("cases",cases);
+        return result;
+    }
+    @RequestMapping("/close")
+    @ResponseBody
+    public ResultEntity close(String closeState) {
+        commentMapper.close(closeState);
+        ResultEntity result = new ResultEntity();
+        result.setResult(true);
         return result;
     }
 }

@@ -42,20 +42,68 @@ transform:translate(-50%,-50%); background-color: rgba(248,248,255,2);border-rad
             <div class="col-auto">
                 <input id="register" type="submit" class="btn btn-primary mb-2" value="修改">
             </div>
-            <div class="col-auto">
-                <div class="small d-inline"><a href="/user/index">返回</a></div>
-            </div>
+
             <input type="hidden" name="actiontype" value="register" />
         </form>
+        <button id="closeLogin" class="btn btn-primary mb-2 ml-3">关闭登录</button>
+        <button id="closeRegister" class="btn btn-primary mb-2">关闭注册</button>
+        <div class="col-auto">
+            <div class="small d-inline"><a href="/user/index">返回</a></div>
+        </div>
     </div>
 </div>
 </body>
 <script>
-    window.addEventListener("keyup",(event)=>{
-        if (event.key==="Enter"){
-            document.getElementById("register").click();
+    let closeWeb = (state)=>{
+        console.log(state);
+        if (state === "注册"){
+            let closeState = document.getElementById("closeRegister").textContent;
+            $.ajax({
+                url: '/comment/close',
+                data: {"closeState":closeState},
+                type: "POST",
+                success: function (data) {
+                    if (data.result){
+                        if (document.getElementById("closeRegister").textContent === "关闭注册"){
+                            alert("网站已关闭注册");
+                            document.getElementById("closeRegister").textContent = "开启注册";
+                        }else {
+                            alert("网站已打开注册");
+                            document.getElementById("closeRegister").textContent = "关闭注册";
+                        }
+                    }
+                    else {
+                        alert("wrong")
+                    }
+                }
+            })
         }
-    });
+        if (state === "登录") {
+            let closeState = document.getElementById("closeLogin").textContent;
+            $.ajax({
+                url: '/comment/close',
+                async: false,
+                data: {"closeState": closeState},
+                type: "POST",
+                success: function (data) {
+                    if (data.result) {
+                        if (document.getElementById("closeLogin").textContent === "关闭登录") {
+                            alert("网站已关闭登录");
+                            document.getElementById("closeLogin").textContent = "开启登录";
+                        } else {
+                            alert("网站已打开登录");
+                            document.getElementById("closeLogin").textContent = "关闭登录";
+                        }
+                    } else {
+                        alert("wrong")
+                    }
+                }
+            });
+        }
+    }
+    document.getElementById("closeLogin").onclick=()=>{closeWeb('登录')}
+    document.getElementById("closeRegister").onclick=()=>{closeWeb('注册')}
+
     $(document).ready(function () {
         $.ajax({
             url: "/user/session",
@@ -67,11 +115,14 @@ transform:translate(-50%,-50%); background-color: rgba(248,248,255,2);border-rad
                         alert("无权访问");
                         window.location.href = ("/user/index");
                     }
-                } else {
-
+                }else {
+                    alert("无权访问");
+                    window.location.href = ("/user/index");
                 }
             }
-        })})
+        })
+    })
+
 
 </script>
 </html>

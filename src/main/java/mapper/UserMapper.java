@@ -3,6 +3,7 @@ package mapper;
 import domain.Tb_Case;
 import domain.Tb_Question;
 import domain.Tb_User;
+import domain.Tb_power;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -31,4 +32,6 @@ public interface UserMapper {
     void setShow(@Param("id") int id, @Param("isShow")String isShow);
 
     void powerChange(@Param("id") int id, @Param("power")int power);
+
+    Tb_power check();
 }

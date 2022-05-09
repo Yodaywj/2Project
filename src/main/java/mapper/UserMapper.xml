@@ -75,4 +75,7 @@
         </if>
         order by id desc,power desc limit 0,#{num};
     </select>
+    <select id="check" resultType="domain.Tb_power">
+        select * from tb_power where id=1;
+    </select>
 </mapper>

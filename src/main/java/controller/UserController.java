@@ -1,9 +1,6 @@
 package controller;
 
-import domain.ResultEntity;
-import domain.Tb_Case;
-import domain.Tb_Question;
-import domain.Tb_User;
+import domain.*;
 import mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -331,6 +328,16 @@ public class UserController {
             out_e.println("window.location.href='/login/power.html'");
             out_e.println("</script>");
         }
+    }
+
+    @RequestMapping("/check")
+    @ResponseBody
+    public ResultEntity check() {
+        Tb_power state = userMapper.check();
+        ResultEntity result =new ResultEntity();
+        result.setResult(true);
+        result.setOther("state",state);
+        return result;
     }
 
 }

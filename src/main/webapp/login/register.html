@@ -66,5 +66,37 @@ transform:translate(-50%,-50%); background-color: rgba(248,248,255,2);border-rad
            document.getElementById("register").click();
        }
        });
+   let power=''
+   $(document).ready(function () {
+       $.ajax({
+           url: "/user/session",
+           method: "POST",
+           dataType: "json",
+           success: function (res) {
+               console.log(res);
+               if (res.result) {
+                   if (res.user["admin"] === 'root'||res.user["admin"] === undefined) {
+                       power = 'root'
+                   }
+               }
+           }
+       })
+       if (power!=='root'){
+           $.ajax({
+               url: "/user/check",
+               method: "POST",
+               dataType: "json",
+               success: function (res) {
+                   console.log(res);
+                   if (res.result) {
+                       if (res.state["register"] === 0) {
+                           alert("网站注册已关闭");
+                           window.location.href = ("/user/index");
+                       }
+                   }
+               }
+           })
+       }
+   })
 </script>
 </html>
