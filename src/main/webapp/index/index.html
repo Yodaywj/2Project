@@ -72,14 +72,7 @@
 				<div class="tab-pane fade show active" align="center" style="width:100%;text-align:center" id="nav-document" role="tabpanel" aria-labelledby="nav-document-tab">
 					<form class="form-inline">
 						<input id="input1" class="form-control ml-auto w-50" type="search">
-						<button id="searchBtn1" class="btn my-green mr-auto my-sm-2 text-white" type="button">开始检索</button>
-						<!-- style="background-color: rgb(17,152,218);" -->
-					</form>
-				</div>
-				<div class="tab-pane fade" align="center" style="width:100%;text-align:center"  id="nav-laws" role="tabpanel" aria-labelledby="nav-laws-tab">
-					<form class="form-inline">
-						<input id="input2" type="text" class="form-control jufa-main-search main-search ml-auto mr-2 w-50" maxlength="255" autocomplete="off" id="searchConObj" placeholder="搜索案例">
-						<button id="searchBtn2" class="btn my-green mr-auto my-sm-1 text-white" type="button">开始检索</button>
+						<a id="searchBtn1" class="btn my-green mr-auto my-sm-2 text-white" href="/display/laws_all.html" type="button">开始检索</a>
 					</form>
 				</div>
 			</div>
@@ -675,10 +668,6 @@
 			return(localhostPaht+projectName+"/");
 		}
 		//搜索按钮1
-		$("#searchBtn1").click(function () {
-			alert('这个是摆设,试试其他的吧');
-			window.location.href="../display/lawCase.html#commentBar";
-		});
 	</script>
 <!--	<script>-->
 <!--		function counter(){-->
