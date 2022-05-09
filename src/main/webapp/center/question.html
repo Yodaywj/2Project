@@ -121,8 +121,8 @@
             method: "POST",
             dataType: "json",
             success: function (res) {
-                console.log(res.result);
-                console.log(res.user);
+
+
                 if (res.result) {
                     $("#loginDisplay").html("  ");
                     $("#sayHi").text("欢迎登陆，"+res.user.userName);

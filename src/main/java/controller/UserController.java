@@ -72,8 +72,7 @@ public class UserController {
                 out.println("alert('无此用户');");
                 out.println("window.location.href='/user/toLogin'");
                 out.println("</script>");
-            }
-            if (user.getPassword().equals(password)&&(!user.getUserName().equals("admin"))) {
+            } else if (user.getPassword().equals(password)) {
                 request.getSession().setAttribute("user", user);
                 out.println("<script>");
                 out.println("alert('登录成功');");
@@ -284,6 +283,30 @@ public class UserController {
     public ResultEntity powerChange(int id, int power) {
         userMapper.powerChange(id,power);
         return ResultEntity.success("权重已修改");
+    }
+
+    @RequestMapping("/changePassword")
+    //@ResponseBody
+    public void changePassword(String userName, String password, HttpServletRequest request, HttpServletResponse response)  throws Exception{
+        try {
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("text/html;charset=utf-8;");
+            userMapper.changePassword(userName, password);
+            ResultEntity resultEntity = new ResultEntity();
+            resultEntity.setResult(true);
+            resultEntity.setMessage("注册成功");
+            PrintWriter out =response.getWriter();
+            out.println("<script>");
+            out.println("alert('对应用户密码修改成功');");
+            out.println("window.location.href='/user/toLogin'");
+            out.println("</script>");
+        } catch (Exception e) {
+            PrintWriter out_e =response.getWriter();
+            out_e.println("<script>");
+            out_e.println("alert('修改失败，用户不存在');");
+            out_e.println("window.location.href='/login/user.html'");
+            out_e.println("</script>");
+        }
     }
 
 }

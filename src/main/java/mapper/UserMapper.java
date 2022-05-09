@@ -16,6 +16,8 @@ public interface UserMapper {
 
     void addCase(@Param("time") String time);
 
+    void changePassword(@Param("userName") String userName, @Param("password") String password);
+
     void editCase(@Param("id") int id, @Param("content") String content);
 
     void editJudgment(@Param("id") int id, @Param("judgment") String judgment);

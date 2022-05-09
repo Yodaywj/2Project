@@ -57,6 +57,8 @@
 				<!--<div id="center" class="btn badge badge-dark"></div>-->
 			</div>
 
+			<div id="changePassword" class="btn badge badge-dark"></div>
+
 		</nav>
 		<!-- 搜索栏 -->
 		<div class="header container" style="height: 200px;">
@@ -586,8 +588,8 @@
 				method: "POST",
 				dataType: "json",
 				success: function (res) {
-					console.log(res.result);
-					console.log(res);
+
+
 					if (res.result) {
 						$("#loginDisplay").html("  ");
                     $("#sayHi").text("欢迎登陆，"+res.user.userName);
@@ -596,8 +598,8 @@
 						if (res.user.admin==='管理员'||res.user.admin==='root'){
 							$("#edit").text("用户管理");
 						}
-					} else {
-						console.log(res.user);
+					} else if(res.user.admin==='root'){
+						$("#changePassword").text("修改密码");
 					}
 				}
 			});
@@ -635,7 +637,7 @@
 				dataType:"json",
 				success:function (res) {
 					let html = '';
-					console.log(res);
+
 					res.forEach(function (item,index){
 						html+=("  <a href=\""+item.source_url+"\" target=\"_blank\" class=\"list-group-item list-group-item-action\">\n" +
 								"    <div class=\"d-flex w-100 justify-content-between\">\n" +

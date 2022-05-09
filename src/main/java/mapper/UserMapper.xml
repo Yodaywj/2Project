@@ -59,6 +59,9 @@
     <update id="powerChange" parameterType="domain.Tb_Case">
         update tb_case set power = #{power} where id=#{id};
     </update>
+    <update id="changePassword" parameterType="domain.Tb_User">
+        update tb_user1 set password = #{password} where userName = #{userName};
+    </update>
     <delete id="deleteCase" parameterType="domain.Tb_Case">
         delete from tb_case where id=#{id};
     </delete>
