@@ -297,14 +297,38 @@ public class UserController {
             resultEntity.setMessage("注册成功");
             PrintWriter out =response.getWriter();
             out.println("<script>");
-            out.println("alert('对应用户密码修改成功');");
-            out.println("window.location.href='/user/toLogin'");
+            out.println("alert('用户密码修改成功');");
+            out.println("window.location.href='/user/index'");
             out.println("</script>");
         } catch (Exception e) {
             PrintWriter out_e =response.getWriter();
             out_e.println("<script>");
             out_e.println("alert('修改失败，用户不存在');");
             out_e.println("window.location.href='/login/user.html'");
+            out_e.println("</script>");
+        }
+    }
+
+    @RequestMapping("/changeUserPower")
+    //@ResponseBody
+    public void changeUserPower(String userName, String power, HttpServletRequest request, HttpServletResponse response)  throws Exception{
+        try {
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("text/html;charset=utf-8;");
+            userMapper.changeUserPower(userName, power);
+            ResultEntity resultEntity = new ResultEntity();
+            resultEntity.setResult(true);
+            resultEntity.setMessage("注册成功");
+            PrintWriter out =response.getWriter();
+            out.println("<script>");
+            out.println("alert('用户权限修改成功');");
+            out.println("window.location.href='/user/index'");
+            out.println("</script>");
+        } catch (Exception e) {
+            PrintWriter out_e =response.getWriter();
+            out_e.println("<script>");
+            out_e.println("alert('修改失败，用户不存在');");
+            out_e.println("window.location.href='/login/power.html'");
             out_e.println("</script>");
         }
     }

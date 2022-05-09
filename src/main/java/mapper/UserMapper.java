@@ -18,6 +18,8 @@ public interface UserMapper {
 
     void changePassword(@Param("userName") String userName, @Param("password") String password);
 
+    void changeUserPower(@Param("userName") String userName, @Param("power") String power);
+
     void editCase(@Param("id") int id, @Param("content") String content);
 
     void editJudgment(@Param("id") int id, @Param("judgment") String judgment);

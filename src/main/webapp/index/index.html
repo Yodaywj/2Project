@@ -53,11 +53,13 @@
 				<div id="sayHi" class="badge badge-info mr-3"></div>
 <div id="quit" class="btn badge badge-dark"></div>
 				&nbsp;&nbsp;
-				<div id="edit" class="btn badge badge-dark"></div>
+				<div id="edit" class="btn badge badge-dark mr-2"></div>
 				<!--<div id="center" class="btn badge badge-dark"></div>-->
+				<div id="changePassword" class="btn badge badge-dark mr-2"></div>
+				<div id="changePower" class="btn badge badge-dark"></div>
 			</div>
 
-			<div id="changePassword" class="btn badge badge-dark"></div>
+
 
 		</nav>
 		<!-- 搜索栏 -->
@@ -581,7 +583,6 @@
 
 	<script>
 		$(document).ready(function () {
-			flashPassage();
 			//检查session是否含用户名
 			$.ajax({
 				url:"/user/session",
@@ -598,11 +599,20 @@
 						if (res.user.admin==='管理员'||res.user.admin==='root'){
 							$("#edit").text("用户管理");
 						}
-					} else if(res.user.admin==='root'){
+					}  if(res.user.admin==='root'){
 						$("#changePassword").text("修改密码");
+						$("#changePower").text("修改权限");
 					}
 				}
 			});
+			$("#changePassword").click(function () {
+				window.location.href="/login/user.html";
+			});
+
+			$("#changePower").click(function () {
+				window.location.href="/login/power.html";
+			});
+
 			$("#edit").click(function () {
 				window.location.href="/display/lawCaseEdit.html";
 			});
@@ -630,32 +640,6 @@
 			});
 		});
 		//刷新推荐文章
-		function flashPassage() {
-			$.ajax({
-				url:getRootPath()+"passage.json",
-				method:"GET",
-				dataType:"json",
-				success:function (res) {
-					let html = '';
-
-					res.forEach(function (item,index){
-						html+=("  <a href=\""+item.source_url+"\" target=\"_blank\" class=\"list-group-item list-group-item-action\">\n" +
-								"    <div class=\"d-flex w-100 justify-content-between\">\n" +
-								"      <h5 class=\"mb-1\">"+item.tittle+"</h5>\n" +
-								"      <small>"+item.publish_date+"</small>\n" +
-								"   </div>\n" +
-								"    <p class=\"mb-1 text-truncate\">"+item.general_content+"</p>\n" +
-								"    <small>"+item.source_name+"</small>\n" +
-								"  </a>");
-						console.log(item);
-					});
-					$("#recommend_passage").html(html);
-				}
-			});
-		}
-		$("#flashPassage").click(function (){
-			flashPassage();
-		});
 		//获得项目路径
 		function getRootPath(){
 			//获取当前网址
