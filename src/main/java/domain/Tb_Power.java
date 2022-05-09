@@ -1,6 +1,6 @@
 package domain;
 
-public class Tb_power {
+public class Tb_Power {
     private int id;
     private int register;
     private int login;

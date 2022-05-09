@@ -10,10 +10,7 @@ import service.IUserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.registry.infomodel.User;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -333,7 +330,7 @@ public class UserController {
     @RequestMapping("/check")
     @ResponseBody
     public ResultEntity check() {
-        Tb_power state = userMapper.check();
+        Tb_Power state = userMapper.check();
         ResultEntity result =new ResultEntity();
         result.setResult(true);
         result.setOther("state",state);

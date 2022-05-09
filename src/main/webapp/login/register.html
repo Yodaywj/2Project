@@ -72,8 +72,8 @@ transform:translate(-50%,-50%); background-color: rgba(248,248,255,2);border-rad
            url: "/user/session",
            method: "POST",
            dataType: "json",
+           async: false,
            success: function (res) {
-               console.log(res);
                if (res.result) {
                    if (res.user["admin"] === 'root'||res.user["admin"] === undefined) {
                        power = 'root'
@@ -87,7 +87,6 @@ transform:translate(-50%,-50%); background-color: rgba(248,248,255,2);border-rad
                method: "POST",
                dataType: "json",
                success: function (res) {
-                   console.log(res);
                    if (res.result) {
                        if (res.state["register"] === 0) {
                            alert("网站注册已关闭");

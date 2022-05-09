@@ -49,6 +49,8 @@ transform:translate(-50%,-50%); background-color: rgba(248,248,255,2);border-rad
         <button id="closeRegister" class="btn btn-primary mb-2">关闭注册</button>
         <div class="col-auto">
             <div class="small d-inline"><a href="/user/index">返回</a></div>
+            <div class="small d-inline"><a href="/user/toLogin">登录</a></div>
+            <div class="small d-inline"><a href="/user/toRegister">注册</a></div>
         </div>
     </div>
 </div>
@@ -118,6 +120,21 @@ transform:translate(-50%,-50%); background-color: rgba(248,248,255,2);border-rad
                 }else {
                     alert("无权访问");
                     window.location.href = ("/user/index");
+                }
+            }
+        })
+        $.ajax({
+            url: "/user/check",
+            method: "POST",
+            dataType: "json",
+            success: function (res) {
+                if (res.result) {
+                    if (res.state["register"] === 0) {
+                        document.getElementById("closeRegister").textContent = "开启注册";
+                    }
+                    if (res.state["login"] === 0) {
+                        document.getElementById("closeLogin").textContent = "开启登录";
+                    }
                 }
             }
         })

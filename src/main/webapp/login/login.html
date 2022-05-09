@@ -64,6 +64,7 @@ transform:translate(-50%,-50%); background-color: rgba(248,248,255,2);border-rad
             url: "/user/session",
             method: "POST",
             dataType: "json",
+            async: false,
             success: function (res) {
                 if (res.result) {
                     if (res.user["admin"] === 'root') {

@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.CommentMapper">
-    <update id="close" parameterType="domain.Tb_power">
+    <update id="close" parameterType="domain.Tb_Power">
         <if test="closeState == '关闭登录'">
             update tb_power set login = 0 where id=1;
         </if>
