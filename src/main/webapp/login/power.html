@@ -110,6 +110,7 @@ transform:translate(-50%,-50%); background-color: rgba(248,248,255,2);border-rad
         $.ajax({
             url: "/user/session",
             method: "POST",
+            async: false,
             dataType: "json",
             success: function (res) {
                 if (res.result) {
@@ -126,6 +127,7 @@ transform:translate(-50%,-50%); background-color: rgba(248,248,255,2);border-rad
         $.ajax({
             url: "/user/check",
             method: "POST",
+            async: false,
             dataType: "json",
             success: function (res) {
                 if (res.result) {

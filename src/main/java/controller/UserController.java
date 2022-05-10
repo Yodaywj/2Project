@@ -316,7 +316,7 @@ public class UserController {
             PrintWriter out =response.getWriter();
             out.println("<script>");
             out.println("alert('用户权限修改成功');");
-            out.println("window.location.href='/user/index'");
+            out.println("window.location.href='/login/power.html'");
             out.println("</script>");
         } catch (Exception e) {
             PrintWriter out_e =response.getWriter();
