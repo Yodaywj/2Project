@@ -169,6 +169,9 @@
                 type: "POST",
                 success: function (data) {
                     if (data.result) {
+                        for (let val in data.rows){
+                            data.rows[val]["userName"] = marked.parse(data.rows[val]["userName"]);
+                        }
                         $('#table-question').bootstrapTable('load', data.rows);
                     } else {
                     }
@@ -188,6 +191,9 @@
                 data:{"num":num,"user":user},
                 success: function (data) {
                     if (data.result) {
+                        for (let val in data.rows){
+                            data.rows[val]["userName"] = marked.parse(data.rows[val]["userName"]);
+                        }
                         $('#table-question').bootstrapTable('load', data.rows);
                     } else {
                         alert('查询失败');

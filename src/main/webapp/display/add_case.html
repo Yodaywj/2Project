@@ -71,40 +71,47 @@
     </div>
 </nav>
 <div class="header container" style="margin-top: 20px !important;">
-    <div>
+    <div class="row">
         <table id="table-question"  class="table-borderless"></table>
     </div>
-    <div id="toolbar" class="row btn-group container mt-3" style="width: 1400px;">
-        <button id="btn-refresh" class="btn btn-light border" style="width: 150px">
-            <span class="glyphicon glyphicon-repeat">刷新</span>
-        </button>
-        <button id="btn-add" class="btn btn-light border" style="width: 200px">
-            <span class="glyphicon glyphicon-repeat">新增文章</span>
-        </button>
-        <button id="btn-case" class="btn btn-light border" style="width: 250px">
-            <span class="glyphicon glyphicon-repeat">编辑案件实例</span>
-        </button>
-        <button id="btn-judge" class="btn btn-light border" style="width: 250px">
-            <span class="glyphicon glyphicon-repeat">编辑案件判决</span>
-        </button>
-        <button id="btn-show" class="btn btn-light border" style="width: 250px">
-            <span class="glyphicon glyphicon-repeat">发布/取消发布</span>
-        </button>
-        <button id="btn-delete" class="btn btn-light border" style="width: 200px">
-            <span class="glyphicon glyphicon-repeat">删除文章</span>
-        </button>
-        <button id="btn-powerChange" class="btn btn-light border" style="width: 200px">
-            <span class="glyphicon glyphicon-repeat">修改文章权重</span>
-        </button>
-        <input id="input3" type="number" style="width: 300px" class="form-control ml-auto
+
+    <div id="toolbar1" class="btn-group mt-3 ml-5" style="width: 1200px;">
+            <button id="btn-refresh" class="btn btn-light border" style="width: 150px">
+                <span class="glyphicon glyphicon-repeat">刷新</span>
+            </button>
+            <button id="btn-add" class="btn btn-light border" style="width: 200px">
+                <span class="glyphicon glyphicon-repeat">新增文章</span>
+            </button>
+            <button id="btn-case" class="btn btn-light border" style="width: 200px">
+                <span class="glyphicon glyphicon-repeat">编辑案件实例</span>
+            </button>
+            <button id="btn-judge" class="btn btn-light border" style="width: 200px">
+                <span class="glyphicon glyphicon-repeat">编辑案件判决</span>
+            </button>
+            <button id="btn-show" class="btn btn-light border" style="width: 250px">
+                <span class="glyphicon glyphicon-repeat">发布/取消发布</span>
+            </button>
+            <button id="btn-delete" class="btn btn-light border" style="width: 200px">
+                <span class="glyphicon glyphicon-repeat">删除文章</span>
+            </button>
+        </div>
+    <div id="toolbar2" class="btn-group border-top-0 ml-5" style="width: 1200px;">
+            <button id="btn-transform" class="btn btn-light border" style="width: 200px">
+                <span class="glyphicon glyphicon-repeat">转换文本格式</span>
+            </button>
+            <button id="btn-powerChange" class="btn btn-light border" style="width: 200px">
+                <span class="glyphicon glyphicon-repeat">修改文章权重</span>
+            </button>
+            <input id="input3" type="number" style="width: 300px" class="form-control ml-auto
         text-center" autocomplete="off" placeholder="文章按权重降序排列发布" min="0" max="10">
-        <button id="btn-select" class="btn btn-light border" style="width: 150px">
-            <span class="glyphicon glyphicon-repeat">查找</span>
-        </button>
-        <input id="input2" type="number" style="width: 200px"
-               class="form-control ml-auto text-center" autocomplete="off" placeholder="显示记录数" value = "">
-        <input id="input1" type="search" style="width: 400px"
-               class="form-control ml-auto  text-center" autocomplete="off" placeholder="查询案件实例">
+            <button id="btn-select" class="btn btn-light border" style="width: 150px">
+                <span class="glyphicon glyphicon-repeat">查找</span>
+            </button>
+            <input id="input2" type="number" style="width: 250px"
+                   class="form-control ml-auto text-center" autocomplete="off" placeholder="显示记录数" value = "">
+            <input id="input1" type="search" style="width: 400px"
+                   class="form-control ml-auto  text-center" autocomplete="off" placeholder="查询案件实例">
+        </div>
     </div>
 </div>
 <div id="layout">
@@ -120,7 +127,9 @@
 <script src="../lib/editormd/editormd.js"></script>
 <script src="../lib/editormd/lib/marked.min.js"></script>
 <script>
+    let tableHeight = 600;
     let input3 = document.getElementById("input3")
+    let transformSign = false;
     input3.addEventListener("keydown",()=>{
         input3.value="";
     })
@@ -211,6 +220,7 @@
                 data:{"num":num,"keyword":keyword},
                 success: function (data) {
                     if (data.result) {
+                        tableHeight = undefined;
                         for (var val in data.cases) {
                             data.cases[val]["content"] = marked.parse(data.cases[val]["content"]);
                             data.cases[val]["judgment"] = marked.parse(data.cases[val]["judgment"]);
@@ -225,6 +235,34 @@
                 }
             })
         };
+        $('#btn-transform').click(function () {
+            if (transformSign){
+                dataGet();
+            }
+            else {
+                const num = 999;
+                const keyword = '@全部@';
+                $.ajax({
+                    url: '/user/showCase',
+                    type: "POST",
+                    data:{"num":num,"keyword":keyword},
+                    success: function (data) {
+                        console.log(data.cases[5])
+                        if (data.result) {
+                            for (var val in data.cases) {
+                                data.cases[val]["content"]=data.cases[val]["content"].replaceAll(/\n/g,"<br/>");
+                                data.cases[val]["content"]=data.cases[val]["judgment"].replaceAll(/\n/g,"<br/>");
+                            }
+                            $('#table-question').bootstrapTable('load', data.cases);
+                        } else {
+                        }
+                    },error:function(){
+                        alert("错误")
+                    }
+                })
+            }
+            transformSign = !transformSign;
+        });
         $('#btn-show').click(function (){
             var a = document.getElementsByClassName("selected")
             var id = a.item(0).children[1].innerHTML;
@@ -311,7 +349,8 @@
         $('#btn-case').click(function () {
             var a = document.getElementsByClassName("selected")
             var id = a.item(0).children[1].innerHTML;
-            let content =  $('#caseChange').text();
+            $("#caseChange").html("ate.value");
+            /*let content =  $('#caseChange').text();
             $.ajax({
                 url:"/user/editCase",
                 type: "post",
@@ -325,7 +364,7 @@
                 error:function (data){
                     alert('wrong');
                 }
-            });
+            });*/
         });
         $('#btn-judge').click(function () {
             var a = document.getElementsByClassName("selected")
@@ -352,7 +391,7 @@
             clickToSelect: true,
             singleSelect: true,
             idField: 'id',
-            height: 800,
+            height: tableHeight,
             columns: [
                 {
                     title: "选择",
