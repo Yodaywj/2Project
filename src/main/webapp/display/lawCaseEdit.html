@@ -253,35 +253,34 @@
             //dataGet();
         });
         $('#btn-delete').click(function () {
-            var res = confirm('确定删除该用户吗？')
-            var a = document.getElementsByClassName("selected")
-            var id = a.item(0).getElementsByTagName("td").item(1).innerHTML;
-            var admin = a.item(0).getElementsByTagName("td").item(4).innerHTML;
-
-            if(res){
-                $.ajax({
-                    url: '/user/delete',
-                    type: "POST",
-                    data: {"id": id,"admin":admin},
-                    success: function (data) {
-                        if (data.result) {
-                            alert('删除成功');
-                            //window.location.href='/comment/tolawCase'
-                            //	$('#table-question').bootstrapTable('load', data.rows);
-                        } else {
-                            alert(data.message);
-                            //window.location.href='/comment/tolawCase'
-                            //	alert(data.message, "错误", null);
-                        }
-                        dataGet();
-                        //	$('#table-question').bootstrapTable('load', data.rows);
-                    },
-                    error: function () {
-                        alert('wrong')
-                    }
-                })
+            var res = confirm('确定删除用户吗？')
+            if (res){
+                alert("已执行")
             }
-            //dataGet();
+            var a = document.getElementsByClassName("selected")
+            for (let i = 0;i<a.length;i++){
+                var id = a.item(i).getElementsByTagName("td").item(1).innerHTML;
+                var admin = a.item(i).getElementsByTagName("td").item(4).innerHTML;
+
+                if(res){
+                    $.ajax({
+                        url: '/user/delete',
+                        type: "POST",
+                        data: {"id": id,"admin":admin},
+                        success: function (data) {
+                            if (data.result) {
+                            } else {
+                                alert(data.message);
+
+                            }
+                        },
+                        error: function () {
+                            alert('wrong')
+                        }
+                    })
+                }
+            }
+            dataGet();
         });
         $('#btn-user').click(function () {
             dataChange();
@@ -298,7 +297,6 @@
             toolbar: '#toolbar',
             striped: true,
             clickToSelect: true,
-            singleSelect: true,
             idField: 'id',
             height: 600,
             columns: [

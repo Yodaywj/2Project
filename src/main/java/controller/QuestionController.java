@@ -3,6 +3,7 @@ package controller;
 import domain.ResultEntity;
 import domain.Tb_Question;
 import domain.Tb_User;
+import mapper.QuestionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,8 @@ public class QuestionController {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private QuestionMapper questionMapper;
     @RequestMapping("/answer")
     public void answer(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request.setCharacterEncoding("utf-8");
@@ -112,6 +115,18 @@ public class QuestionController {
             return resultEntity;
         } catch (Exception e) {
             return ResultEntity.failure("查询失败");
+        }
+    }
+
+    @RequestMapping("/delete")
+    @ResponseBody
+    public ResultEntity delete(String time,String userName,HttpServletRequest request) {
+        Tb_User user = (Tb_User)request.getSession().getAttribute("user");
+        if (!user.getAdmin().equals("普通用户")) {
+            questionMapper.deleteQuestion(userName,time);
+            return ResultEntity.success("删除成功");
+        }else {
+            return ResultEntity.failure("非管理员不能删除");
         }
     }
 }

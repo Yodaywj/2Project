@@ -331,65 +331,75 @@
         });
         $('#btn-delete').click(function () {
             var a = document.getElementsByClassName("selected")
-            var id = a.item(0).children[1].innerHTML;
-            $.ajax({
-                url:"/user/deleteCase",
-                type: "post",
-                dataType:"json",
-                data: {"id": id},
-                success:function (data){
-                    alert(data.message);
-                    dataGet();
-                },
-                error:function (data){
-                    alert('wrong');
+            var res = confirm('确定删除文章吗？')
+            if (res){
+                for (let i=0;i<a.length;i++){
+                    var id = a.item(i).children[1].innerHTML;
+                    $.ajax({
+                        url:"/user/deleteCase",
+                        type: "post",
+                        dataType:"json",
+                        data: {"id": id},
+                        success:function (data){
+                            console.log(data.message);
+                        },
+                        error:function (data){
+                            alert('wrong');
+                        }
+                    });
                 }
-            });
+                alert("删除成功")
+            }
+            dataGet();
         });
         $('#btn-case').click(function () {
-            var a = document.getElementsByClassName("selected")
-            var id = a.item(0).children[1].innerHTML;
-            $("#caseChange").html("ate.value");
-            /*let content =  $('#caseChange').text();
-            $.ajax({
-                url:"/user/editCase",
-                type: "post",
-                dataType:"json",
-                data: {"id": id,"content":content},
-                success:function (data){
-                    alert(data.message);
-                    content = marked.parse(content);
-                    a.item(0).children[2].innerHTML=content;
-                },
-                error:function (data){
-                    alert('wrong');
-                }
-            });*/
+            var res = confirm('确定编辑吗？')
+            if (res){
+                var a = document.getElementsByClassName("selected")
+                var id = a.item(0).children[1].innerHTML;
+                let content =  $('#caseChange').text();
+                $.ajax({
+                    url:"/user/editCase",
+                    type: "post",
+                    dataType:"json",
+                    data: {"id": id,"content":content},
+                    success:function (data){
+                        alert(data.message);
+                        content = marked.parse(content);
+                        a.item(0).children[2].innerHTML=content;
+                    },
+                    error:function (data){
+                        alert('wrong');
+                    }
+                });
+            }
         });
         $('#btn-judge').click(function () {
-            var a = document.getElementsByClassName("selected")
-            var id = a.item(0).children[1].innerHTML;
-            let judgment =  $('#caseChange').text();
-            $.ajax({
-                url:"/user/editJudgment",
-                type: "post",
-                dataType:"json",
-                data: {"id": id,"judgment":judgment},
-                success:function (data){
-                    alert(data.message);
-                    judgment = marked.parse(judgment);
-                    a.item(0).children[3].innerHTML=judgment;
-                },
-                error:function (data){
-                    alert('wrong');
-                }
-            });
+            var res = confirm('确定编辑吗？')
+            if (res){
+                var a = document.getElementsByClassName("selected")
+                var id = a.item(0).children[1].innerHTML;
+                let judgment =  $('#caseChange').text();
+                $.ajax({
+                    url:"/user/editJudgment",
+                    type: "post",
+                    dataType:"json",
+                    data: {"id": id,"judgment":judgment},
+                    success:function (data){
+                        alert(data.message);
+                        judgment = marked.parse(judgment);
+                        a.item(0).children[3].innerHTML=judgment;
+                    },
+                    error:function (data){
+                        alert('wrong');
+                    }
+                });
+            }
         });
         $('#table-question').bootstrapTable({
             /*toolbar: '#toolbar',*/
             striped: true,
-            clickToSelect: true,
-            singleSelect: true,
+            singleSelect:true,
             idField: 'id',
             height: tableHeight,
             columns: [

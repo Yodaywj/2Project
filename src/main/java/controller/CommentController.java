@@ -78,7 +78,7 @@ public class CommentController {
             resultEntity.setResult(true);
             return resultEntity;
         } else {
-            return ResultEntity.failure("查询失败");
+            return ResultEntity.failure(id+"的留言删除失败(只能删除自己的留言)");
         }
     }
 

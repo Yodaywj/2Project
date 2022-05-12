@@ -8,4 +8,6 @@ import java.util.List;
 public interface QuestionMapper {
     void save(Tb_Question question);
     List<Tb_Question> listQuestionLimti10(@Param("num") int num,@Param("user") String user);
+
+    void deleteQuestion(@Param("userName")String userName,@Param("time")String time);
 }

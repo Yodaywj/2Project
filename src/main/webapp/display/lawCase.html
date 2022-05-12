@@ -101,7 +101,7 @@
         </nav>
     </div>
 </div>
-<div class="collapse multi-collapse" id="commentArea">
+<div class="collapse" id="commentArea">
     <div class="card card-body border-0">
         <hr style="height: 1px; background-color: #17a2b8"/>
         <div class="header container" style="margin-top: 20px !important;">
@@ -132,11 +132,11 @@
                 <textarea id="caseChange" style="display:none;"></textarea>
             </div>
             <div class="btn-group">
-                <button class="btn btn-primary mb-5" onclick="comment()" style="margin-left: 200px;">提交</button>
+                <button id="defaultCase" class="btn btn-primary mb-5 border-right" style="margin-left: 200px;">默认提交(文章id:0)</button>
+                <button class="btn btn-primary mb-5 border-left" onclick="comment()">提交</button>
                 <input id="casesNum" type="number" value="" class="form-control disabled" autocomplete="off" placeholder="输入文章ID"
                        style="width: 130px; border-bottom-left-radius: 0px;border-top-left-radius: 0px;" min="1" max="1">
                 <button id="toSingleCase" class="btn btn-primary mb-5">文章跳转</button>
-                <button id="defaultCase" class="btn btn-primary mb-5 border-left">默认提交(文章id:0)</button>
             </div>
         </div>
     </div>
@@ -145,6 +145,7 @@
 <script src="../lib/editormd/editormd.js"></script>
 <script src="../lib/editormd/lib/marked.min.js"></script>
 <script>
+    var testEditor;
     let commentLink = (id)=>{
         if ($("#commentArea").css("display") === "none"){
             document.getElementById("showComment").click();
@@ -169,6 +170,56 @@
     let caseTime = [];
     let timeMap = new Map();
     let ccMap = new Map();
+    let once =1;
+    let UNMap = new Map();
+    $("#showComment").click(()=>{
+        testEditor = editormd("test-editormd", {
+            width: "80%",
+            height: 300,
+            syncScrolling: "single",
+            path: "../lib/editormd/lib/",
+            saveHTMLToTextarea: true,    // 保存 HTML 到 Textarea
+            emoji: true,
+            tex: true,                   // 开启科学公式TeX语言支持，默认关闭
+            flowChart: true,             // 开启流程图支持，默认关闭
+            sequenceDiagram: true,       // 开启时序/序列图支持，默认关闭,
+            //图片上传
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "/article/file/upload", //图片上传路径
+            onload: function () {
+                console.log('onload', this);
+                /*casesGet();*/
+            }
+        });
+        /*document.addEventListener('click',function(e){
+            if (once===1){
+                let area = document.getElementById("commentArea").getElementsByClassName("fa fa-eye-slash");
+                let sho =area.item(0);
+                sho.click();
+                sho.click();
+                once = 0;
+            }
+        })
+        document.addEventListener('mousemove',function(e){
+            if (once===1){
+                let area = document.getElementById("commentArea").getElementsByClassName("fa fa-eye-slash");
+                let sho =area.item(0);
+                sho.click();
+                sho.click();
+                once = 0;
+            }
+        })
+        document.addEventListener('touchstart',function(e){
+            if (once===1){
+                let area = document.getElementById("commentArea").getElementsByClassName("fa fa-eye-slash");
+                let sho =area.item(0);
+                sho.click();
+                sho.click();
+                once = 0;
+            }
+        })*/
+    })
     $("#defaultCase").click(()=>{
       document.getElementById("casesNum").value = 0;
       comment();
@@ -342,6 +393,9 @@
             success: function (data) {
                 for (let val in data.rows){
                     let CID=data.rows[val]["commentId"];
+                    let aa = data.rows[val]["userName"];
+                    data.rows[val]["userName"] = marked.parse(data.rows[val]["userName"]);
+                    UNMap.set(data.rows[val]["userName"],aa);
                     data.rows[val]["commentId"] = `<a href='#' onclick='singleCaseRender(${CID})'>${CID}</a>`
                 }
                 $('#table-question').bootstrapTable('load', data.rows);
@@ -367,6 +421,9 @@
                 if (data.result) {
                     for (let val in data.rows){
                         let CID=data.rows[val]["commentId"];
+                        let aa = data.rows[val]["userName"];
+                        data.rows[val]["userName"] = marked.parse(data.rows[val]["userName"]);
+                        UNMap.set(data.rows[val]["userName"],aa);
                         data.rows[val]["commentId"] = `<a href='#' onclick='singleCaseRender(${CID})'>${CID}</a>`
                     }
                     $('#table-question').bootstrapTable('load', data.rows);
@@ -422,30 +479,35 @@
     }
     $('#btn-refresh').click(function () {
         var a = document.getElementsByClassName("selected")
-        var id =a.item(0).children[2].innerHTML;
-        let time = a.item(0).children[4].innerHTML;
-        console.log(time,id)
-        $.ajax({
-            url: '/comment/del',
-            type: "POST",
-            data: {"id": id,"time":time},
-            success: function (data) {
-                if (data.result) {
-                    alert('删除成功');
-                    //window.location.href='/comment/tolawCase'
+        let result = false
+        for (let i=0;i<a.length;i++){
+            var id =UNMap.get(a.item(i).children[2].innerHTML);
+            let time = a.item(i).children[4].innerHTML;
+            $.ajax({
+                url: '/comment/del',
+                type: "POST",
+                data: {"id": id,"time":time},
+                success: function (data) {
+                    if (data.result) {
+                        //window.location.href='/comment/tolawCase'
+                        //	$('#table-question').bootstrapTable('load', data.rows);
+                    } else {
+                        result = false;
+                        alert(data.message);
+                        //window.location.href='/comment/tolawCase'
+                        //	alert(data.message, "错误", null);
+                    }
+                    if (result){
+                        alert("删除成功");
+                    }
+                    dataGet();
                     //	$('#table-question').bootstrapTable('load', data.rows);
-                } else {
-                    alert('只能删除自己的留言');
-                    //window.location.href='/comment/tolawCase'
-                    //	alert(data.message, "错误", null);
+                },
+                error: function () {
+                    alert('wrong1')
                 }
-                dataGet();
-                //	$('#table-question').bootstrapTable('load', data.rows);
-            },
-            error: function () {
-                alert('wrong1')
-            }
-        })
+            })
+        }
         //dataGet();
     });
     $(document).ready(function () {
@@ -500,8 +562,8 @@
         $('#table-question').bootstrapTable({
             toolbar: '#toolbar',
             striped: true,
-            singleSelect: true,
             idField: 'id',
+            clickToSelect:true,
             height: 500,
             columns: [
                 {
@@ -529,10 +591,9 @@
                 }
             ]
         });
-    });
-    var testEditor;
 
-    $(function () {
+    });
+    $(function() {
         testEditor = editormd("test-editormd", {
             width: "80%",
             height: 300,

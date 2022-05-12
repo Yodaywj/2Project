@@ -71,9 +71,12 @@
 <!-- 搜索栏 -->
 <div class="header container" style="margin-top: 20px !important;">
     <table id="table-question" class="table-borderless"></table>
-    <div id="toolbar" class="btn-group">
+    <div id="toolbar" class="btn-group" style="width: 700px;">
         <button id="btn-refresh" class="btn btn-light border">
             <span class="glyphicon glyphicon-repeat">刷新</span>
+        </button>
+        <button id="btn-delete" class="btn btn-light border">
+            <span class="glyphicon glyphicon-repeat">删除</span>
         </button>
         <button id="btn-select" class="btn btn-light border" >
             <span class="glyphicon glyphicon-repeat">查找</span>
@@ -112,8 +115,9 @@
     </div>
 </footer>
 </body>
-
+<script src="../lib/editormd/lib/marked.min.js"></script>
 <script>
+    let UNMap = new Map();
     $(document).ready(function () {
         //检查session是否含用户名
         $.ajax({
@@ -170,7 +174,9 @@
                 success: function (data) {
                     if (data.result) {
                         for (let val in data.rows){
+                            let aa = data.rows[val]["userName"];
                             data.rows[val]["userName"] = marked.parse(data.rows[val]["userName"]);
+                            UNMap.set(data.rows[val]["userName"],aa);
                         }
                         $('#table-question').bootstrapTable('load', data.rows);
                     } else {
@@ -192,7 +198,9 @@
                 success: function (data) {
                     if (data.result) {
                         for (let val in data.rows){
+                            let aa = data.rows[val]["userName"];
                             data.rows[val]["userName"] = marked.parse(data.rows[val]["userName"]);
+                            UNMap.set(data.rows[val]["userName"],aa);
                         }
                         $('#table-question').bootstrapTable('load', data.rows);
                     } else {
@@ -208,6 +216,36 @@
         $('#btn-user').click(function () {
             dataChange();
         });
+        $('#btn-delete').click(function () {
+            a = document.getElementsByClassName("selected");
+            let result =true;
+            for (let i=0;i<a.length;i++){
+                var userName =UNMap.get(a.item(i).children[2].innerHTML);
+                let time = a.item(i).children[3].innerHTML;
+                $.ajax({
+                    url: '/question/delete',
+                    type: "POST",
+                    async:false,
+                    data:{"time":time,"userName":userName},
+                    success: function (data) {
+                        if (data.result) {
+                        } else {
+                            result = false;
+                        }
+                    },
+                    error:function(){
+                        alert("wrong");
+                    }
+                })
+            }
+            if (result){
+                alert("删除成功")
+            }
+            else {
+                alert("删除失败")
+            }
+            dataGet();
+        });
         $('#btn-refresh').click(function () {
             dataGet();
         });
@@ -218,7 +256,6 @@
             toolbar: '#toolbar',
             striped: true,
             clickToSelect: true,
-            singleSelect: true,
             idField: 'id',
             height: 600,
             columns: [
