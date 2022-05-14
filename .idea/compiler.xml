@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ssm" />
         <module name="SSMProject" />
+        <module name="civil" />
       </profile>
     </annotationProcessing>
   </component>
