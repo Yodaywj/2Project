@@ -1,0 +1,70 @@
+create table lawsNet.tb_case
+(
+    id       int auto_increment
+        primary key,
+    content  text                      not null,
+    judgment text                      not null,
+    isShow   varchar(45) default '未发布' not null,
+    power    int         default 0     not null,
+    time     varchar(45) default '0'   not null,
+    constraint tb_case_id_uindex
+        unique (id),
+    constraint tb_case_time_uindex
+        unique (time)
+);
+
+create table lawsNet.tb_comment1
+(
+    id        int unsigned auto_increment
+        primary key,
+    correct   varchar(255)  not null,
+    userName  varchar(255)  null,
+    time      varchar(255)  null,
+    commentId int default 0 not null
+);
+
+create table lawsNet.tb_power
+(
+    id       int auto_increment
+        primary key,
+    register int default 1 not null,
+    login    int default 1 not null,
+    constraint tb_power_id_uindex
+        unique (id)
+);
+
+create table lawsNet.tb_question
+(
+    id       int auto_increment
+        primary key,
+    type     varchar(45) null,
+    answer1  varchar(45) null,
+    answer2  varchar(45) null,
+    answer3  varchar(45) null,
+    answer4  varchar(45) null,
+    answer5  varchar(45) null,
+    answer6  varchar(45) null,
+    answer7  varchar(45) null,
+    answer8  varchar(45) null,
+    answer9  varchar(45) null,
+    answer10 varchar(45) null,
+    time     varchar(45) not null,
+    userName varchar(45) not null,
+    correct  varchar(45) not null
+)
+    charset = utf8;
+
+create table lawsNet.tb_user1
+(
+    id       int auto_increment
+        primary key,
+    userName varchar(45)                not null,
+    password varchar(45)                null,
+    state    varchar(45) default '正常'   not null,
+    admin    varchar(45) default '普通用户' not null,
+    constraint tb_user1_id_uindex
+        unique (id),
+    constraint tb_user1_userName_uindex
+        unique (userName)
+);
+
