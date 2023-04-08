@@ -38,7 +38,7 @@ public class CommentController {
             int num = 50;
             String user = "";
             int commentId = -1;
-            List<Tb_Comment> questions = commentService.listAll(num, user ,commentId);
+            List<Tb_Comment> questions = commentService.listAll(num, user, commentId);
             ResultEntity resultEntity = new ResultEntity();
             resultEntity.setResult(true);
             resultEntity.setOther("rows", questions);
@@ -47,14 +47,15 @@ public class CommentController {
             return ResultEntity.failure("查询失败");
         }
     }
+
     @RequestMapping("/listComment")
     @ResponseBody
-    public ResultEntity listComment(int num,String user,int commentId) {
+    public ResultEntity listComment(int num, String user, int commentId) {
         try {
-            if (num==0){
-                num=99;
+            if (num == 0) {
+                num = 99;
             }
-            List<Tb_Comment> questions = commentService.listAll(num,user,commentId);
+            List<Tb_Comment> questions = commentService.listAll(num, user, commentId);
             ResultEntity resultEntity = new ResultEntity();
             resultEntity.setResult(true);
             resultEntity.setOther("rows", questions);
@@ -73,12 +74,12 @@ public class CommentController {
         String time = request.getParameter("time");
         Tb_User u = (Tb_User) request.getSession().getAttribute("user");
         ResultEntity resultEntity = new ResultEntity();
-        if (id.equals(u.getUserName())||u.getAdmin().equals("root")) {
-            commentService.del(id,time);
+        if (id.equals(u.getUserName()) || u.getAdmin().equals("root")) {
+            commentService.del(id, time);
             resultEntity.setResult(true);
             return resultEntity;
         } else {
-            return ResultEntity.failure(id+"的留言删除失败(只能删除自己的留言)");
+            return ResultEntity.failure(id + "的留言删除失败(只能删除自己的留言)");
         }
     }
 
@@ -93,7 +94,7 @@ public class CommentController {
             Tb_Comment t = new Tb_Comment();
             Tb_User u = (Tb_User) request.getSession().getAttribute("user");
             if (u == null) throw new Exception("");
-            if (u.getState().equals("禁言")){
+            if (u.getState().equals("禁言")) {
                 return ResultEntity.failure("该账户已禁言");
             } else {
                 t.setUserName(u.getUserName());
@@ -112,15 +113,17 @@ public class CommentController {
             return ResultEntity.failure("请先登录");
         }
     }
+
     @RequestMapping("/showNewCases")
     @ResponseBody
     public ResultEntity showNewCases() {
         List<Tb_Case> cases = commentService.showNewCases();
         ResultEntity result = new ResultEntity();
         result.setResult(true);
-        result.setOther("cases",cases);
+        result.setOther("cases", cases);
         return result;
     }
+
     @RequestMapping("/close")
     @ResponseBody
     public ResultEntity close(String closeState) {
@@ -129,4 +132,29 @@ public class CommentController {
         result.setResult(true);
         return result;
     }
+
+//    @RequestMapping("/test")
+//    @ResponseBody
+//    public ResultEntity test(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//        try {
+//            response.setCharacterEncoding("utf-8");
+//            response.setContentType("text/html;charset=utf-8;");
+//            String correct = request.getParameter("correct");
+//            int commentId = Integer.parseInt(request.getParameter("commentId"));
+//            Tb_Comment t = new Tb_Comment();
+//            t.setcorrect(correct);
+//            t.setCommentId(commentId);
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            java.util.Date date = new java.util.Date();
+//            String str = sdf.format(date);
+//            t.settime(str);
+//            commentService.save(t);
+//            ResultEntity resultEntity = new ResultEntity();
+//            resultEntity.setResult(true);
+//            return ResultEntity.success("留言成功");
+//
+//        } catch (Exception e) {
+//            return ResultEntity.failure("留言失败");
+//        }
+//    }
 }
